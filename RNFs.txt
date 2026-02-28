@@ -1,0 +1,27 @@
+## RNF01 – Desempenho
+
+**Descrição:**
+O sistema deve apresentar o resultado da simulação de viabilidade em até 3 segundos após o envio dos dados pelo usuário.
+
+**Categoria:** Desempenho
+
+**Justificativa:**
+Usuários buscam uma resposta rápida para tomada de decisão. A demora pode gerar abandono da ferramenta.
+
+**Critério de Aceitação:**
+Ao inserir consumo mensal e localização, o tempo máximo de processamento não pode ultrapassar 3 segundos.
+
+---
+
+## RNF02 – Facilidade de Uso
+
+**Descrição:**
+O sistema deve permitir que o usuário realize a simulação em no máximo 3 etapas simples, sem necessidade de conhecimento técnico prévio.
+
+**Categoria:** Usabilidade
+
+**Justificativa:**
+O público-alvo possui conhecimento limitado sobre energia solar e prefere soluções intuitivas.
+
+**Critério de Aceitação:**
+Um usuário leigo deve conseguir concluir a simulação sem auxílio externo ou tutorial.
