@@ -1,0 +1,75 @@
+# CRIAÇÃO DAS PERSONAS
+
+## Persona 1 — Carlos Almeida
+
+**Contexto:** proprietário de casa própria em cidade de médio porte. Trabalha em horário comercial e é responsável pelas contas da residência. Usa principalmente celular para pesquisas rápidas e notebook à noite.
+
+**Objetivo:** descobrir se vale a pena investir em painéis solares para reduzir a conta de luz da casa e em quanto tempo terá o retorno do investimento (payback).
+
+**Dores:**
+
+* Não entende como calcular o retorno financeiro.
+* Tem receio de investir alto sem garantia de economia.
+* Recebe informações muito técnicas dos vendedores.
+* Não sabe como a incidência solar da região impacta no resultado.
+
+**Comportamento atual:**
+
+* Pesquisa no Google e salva sites de empresas instaladoras.
+* Compara contas de luz antigas para tentar estimar consumo.
+* Assiste vídeos explicativos sobre energia solar.
+* Solicita orçamentos antes de saber se o investimento realmente compensa.
+
+**Restrições:**
+
+* Pouco tempo para análises complexas.
+* Conhecimento técnico limitado.
+* Orçamento controlado e necessidade de segurança na decisão.
+* Prefere soluções simples e diretas.
+
+**Critérios de sucesso:**
+
+* Inserir consumo mensal e localização em menos de 3 minutos.
+* Receber resposta clara sobre viabilidade.
+* Visualizar tempo estimado de payback.
+* Entender economia mensal projetada de forma simples.
+* Sentir segurança para decidir se deve investir.
+
+
+
+## Persona 2 — Mariana Torres
+
+**Contexto:** administradora financeira de uma pequena empresa (padaria/restaurante/mercado). Responsável pelo controle de custos operacionais. Usa notebook no trabalho e planilhas para análise financeira.
+
+**Objetivo:** avaliar se a instalação de painéis solares reduzirá significativamente os custos fixos da empresa e qual será o prazo de retorno do investimento.
+
+**Dores:**
+
+* Alto custo mensal de energia impactando o lucro.
+* Dificuldade em projetar economia futura com precisão.
+* Insegurança sobre variáveis como manutenção e variação tarifária.
+* Falta de ferramenta clara para simular cenários.
+
+**Comportamento atual:**
+
+* Analisa relatórios de consumo mensal em planilhas.
+* Consulta múltiplos fornecedores para comparar propostas.
+* Faz cálculos aproximados de economia sem considerar todos os fatores.
+* Pesquisa incentivos fiscais e linhas de financiamento.
+
+**Restrições:**
+
+* Necessidade de justificar investimento com dados concretos.
+* Orçamento empresarial limitado.
+* Tempo reduzido para análises muito técnicas.
+* Busca solução prática e objetiva.
+
+**Critérios de sucesso:**
+
+* Simular diferentes cenários de consumo e investimento.
+* Visualizar economia estimada.
+* Obter cálculo claro do payback.
+* Gerar relatório simples para apresentar aos sócios.
+* Ter base numérica confiável para tomada de decisão.
+
+
