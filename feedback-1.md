@@ -31,3 +31,5 @@ O documento de visão deveria conter:
 - mistura de tarefas técnicas com requisitos de domínio
 
 Esses pontos são importantes porque o projeto exige clareza e documentação consistente, não apenas ideias gerais.
+
+Atenção! ao fazer o commit do feedback, percebi que a branch main está sem regra de proteção e o PR está sendo aceito sem revisão.
