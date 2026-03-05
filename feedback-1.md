@@ -31,4 +31,3 @@ O documento de visão deveria conter:
 - mistura de tarefas técnicas com requisitos de domínio
 
 Esses pontos são importantes porque o projeto exige clareza e documentação consistente, não apenas ideias gerais.
-Com IA a sua disposição, é inadmissível entregar um documentação com essa qualidade!
