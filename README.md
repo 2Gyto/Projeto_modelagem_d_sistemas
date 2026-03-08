@@ -29,8 +29,14 @@ RF06 – Estimativa de Payback: O sistema deve calcular o tempo de retorno do in
 RF07 – Dashboard Comparativo: O sistema deve exibir um gráfico comparativo entre o custo acumulado com a concessionária vs. o custo com o sistema fotovoltaico ao longo do tempo.
 
 5. Requisitos Não Funcionais (RNF)
-Desempenho: O cálculo de projeção de 25 anos deve ser processado em até 30 segundos.
+RNF01 -Desempenho: O cálculo de projeção de 25 anos deve ser processado em até 30 segundos.
 
-Portabilidade: O dashboard deve ser responsivo (acessível via web)
+RNF02 - Portabilidade: O dashboard deve ser responsivo (acessível via web)
 
-Confiabilidade: Os dados de tarifas devem ser atualizados mensalmente conforme resoluções da ENEEL.
+RNF03 - Confiabilidade: Os dados de tarifas devem ser atualizados mensalmente conforme resoluções da ENEEL.
+
+RNF04 - Design Intuitivo: O fluxo de preenchimento (do CEP ao resultado) não deve exceder 5 etapas para evitar o abandono do usuário.
+
+RNF05 - Visualização de Dados: Os gráficos do Dashboard Comparativo (RF07) devem possuir legendas claras e suporte a daltônicos (uso de texturas ou paletas de cores acessíveis).
+
+RNF06 - Localização: O sistema deve utilizar o padrão monetário brasileiro (BRL) e o sistema métrico decimal para áreas e distâncias.
