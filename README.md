@@ -1,42 +1,144 @@
-# ☀️ SolarCalc - Simulador de Viabilidade Fotovoltaica
+#Documento de Visão do Produto
 
-## Visão do Produto
-Problema: Proprietários investem em energia solar sem entender o tempo real de retorno (Payback), baseando-se em estimativas vagas que não consideram sombreamento local, taxas da concessionária ou degradação dos painéis.
+##1. Identificação do Produto
+Nome do produto: SolarCalc - Simulador de Viabilidade Fotovoltaica
 
-2. Público-Alvo
-Proprietários Residenciais: Focados em economia doméstica e valorização do imóvel.
+Versão do documento: 1.0
 
-Pequenos Comerciantes: Focados em redução de custo operacional (OPEX) e previsibilidade de caixa.
+Data: 12/03/2026
 
-3. Escopo e Fora de Escopo
-No Escopo: Cálculo de viabilidade, Integração com APIs de índices de irradiação (SWERA/INPE), cálculo de ROI, suporte a diferentes tarifas de concessionárias brasileiras.
+Equipe responsável: Equipe do projeto
 
-Fora de Escopo:  O sistema não fará a venda direta de equipamentos, não fará o projeto de engenharia para submissão à concessionária e não fará o monitoramento em tempo real pós-instalação.
+##2. Visão Geral
+O SolarCalc é um simulador web voltado ao cálculo de viabilidade e tempo real de retorno (Payback) para investimentos em energia solar fotovoltaica.
 
-4. Requisitos funcionais (RF)
-RF01 – Coleta de Consumo: O sistema deve permitir que o usuário insira a média de consumo mensal de energia em kWh ou o valor médio da conta em Reais.
+O sistema busca trazer transparência e precisão para o consumidor, considerando fatores reais de localização e tarifas, e oferecendo uma projeção financeira clara do investimento.
 
-RF02 – Localização Geográfica: O sistema deve permitir que o usuário informe o CEP ou selecione a cidade para buscar os índices de irradiação solar (índice HSP - Hours Full Sun).
+##3. Problema
+Muitos proprietários investem em energia solar sem entender o tempo real de retorno do investimento (Payback). As decisões muitas vezes baseiam-se em estimativas vagas que ignoram fatores críticos, como sombreamento local, taxas específicas da concessionária de energia e a degradação dos painéis ao longo do tempo.
 
-RF03 – Especificação de Área: O sistema deve permitir a entrada da área disponível para instalação (m²) e a orientação do telhado (Norte, Sul, Leste, Oeste).
+Isso gera incerteza financeira, expectativas frustradas e dificuldade na tomada de decisão sobre a instalação do sistema.
 
-RF04 – Seleção de Perfil: O sistema deve permitir que o usuário selecione o tipo de conexão (Monofásica, Bifásica ou Trifásica) para calcular a taxa de disponibilidade.
+##4. Objetivo do Produto
+O produto tem como objetivo:
 
-RF05 – Cálculo de Geração Estimada: O sistema deve calcular a produção mensal de energia com base na potência do sistema escolhido e nos dados climáticos da região.
+- calcular a viabilidade financeira e o tempo de retorno (Payback) de sistemas fotovoltaicos
 
-RF06 – Estimativa de Payback: O sistema deve calcular o tempo de retorno do investimento (em anos e meses).
+- estimar a geração mensal de energia com base em dados climáticos e geográficos
 
-RF07 – Dashboard Comparativo: O sistema deve exibir um gráfico comparativo entre o custo acumulado com a concessionária vs. o custo com o sistema fotovoltaico ao longo do tempo.
+- comparar os custos acumulados com a concessionária versus o custo do sistema solar
 
-5. Requisitos Não Funcionais (RNF)
-RNF01 -Desempenho: O cálculo de projeção de 25 anos deve ser processado em até 30 segundos.
+- prover dados precisos integrando índices de irradiação solar e tarifas de concessionárias
 
-RNF02 - Portabilidade: O dashboard deve ser responsivo (acessível via web)
+##5. Público-Alvo
+O sistema é destinado principalmente a:
 
-RNF03 - Confiabilidade: Os dados de tarifas devem ser atualizados mensalmente conforme resoluções da ENEEL.
+- proprietários residenciais
 
-RNF04 - Design Intuitivo: O fluxo de preenchimento (do CEP ao resultado) não deve exceder 5 etapas para evitar o abandono do usuário.
+- pequenos comerciantes
 
-RNF05 - Visualização de Dados: Os gráficos do Dashboard Comparativo (RF07) devem possuir legendas claras e suporte a daltônicos (uso de texturas ou paletas de cores acessíveis).
+##6. Principais Necessidades dos Usuários
+###Proprietários Residenciais
+- reduzir o valor da conta de luz (economia doméstica)
 
-RNF06 - Localização: O sistema deve utilizar o padrão monetário brasileiro (BRL) e o sistema métrico decimal para áreas e distâncias.
+- valorizar o seu imóvel
+
+- entender de forma simples em quanto tempo o sistema se paga
+
+###Pequenos Comerciantes
+- reduzir o custo operacional do negócio (OPEX)
+
+- obter previsibilidade de caixa a longo prazo
+
+- comparar de forma clara os cenários com e sem energia solar
+
+##7. Proposta de Valor
+O sistema oferece uma simulação financeira e técnica precisa, baseada em dados reais e atualizados, permitindo que o usuário visualize com clareza o retorno do seu investimento.
+
+Em vez de depender de orçamentos enviesados de vendedores, o produto fornece autonomia, transparência e segurança na decisão de investir em energia solar.
+
+##8. Funcionalidades Principais
+- coleta de dados de consumo (média em kWh ou valor em Reais)
+
+- identificação de localização (CEP ou cidade) e busca de índices de irradiação (HSP)
+
+- especificação de área disponível (m²) e orientação do telhado
+
+- seleção de perfil de conexão (Monofásica, Bifásica ou Trifásica)
+
+- cálculo de geração estimada de energia
+
+- cálculo e estimativa de Payback (em anos e meses)
+
+- dashboard de gráfico comparativo de custos (concessionária vs. fotovoltaico)
+
+##9. Benefícios Esperados
+- maior segurança na decisão de investimento
+
+- transparência sobre os custos reais e o tempo de retorno
+
+- agilidade na obtenção de uma análise de viabilidade confiável
+
+- facilidade de compreensão dos dados financeiros e técnicos
+
+##10. Restrições e Premissas
+###Restrições
+- o sistema será uma aplicação web responsiva
+
+- o fluxo de preenchimento deve ter no máximo 5 etapas
+
+- o cálculo de projeção de 25 anos deve ocorrer em até 30 segundos
+
+- o design dos gráficos deve ser acessível para daltônicos e ter legendas claras
+
+- uso exclusivo do padrão monetário brasileiro (BRL) e sistema métrico decimal
+
+###Premissas
+ - o usuário tem acesso aos dados de sua conta de luz (consumo ou valor pago)
+
+- haverá acesso à internet para integração com APIs de irradiação (SWERA/INPE)
+
+- os dados de tarifas precisam ser atualizados mensalmente conforme resoluções da ANEEL
+
+##11. Diferenciais do Produto
+- integração direta com APIs de índices de irradiação confiáveis (SWERA/INPE)
+
+- suporte nativo às diferentes tarifas das concessionárias brasileiras
+
+- cálculo que considera a taxa de disponibilidade por tipo de conexão (mono/bi/trifásica)
+
+- foco absoluto na experiência do usuário, com acessibilidade e rapidez
+
+##12. Critérios de Sucesso
+O produto será considerado bem-sucedido se:
+
+- os usuários conseguirem concluir a simulação sem abandonar o fluxo (máximo de 5 etapas)
+
+- os resultados forem gerados de forma rápida (abaixo de 30 segundos)
+
+- as estimativas geradas refletirem com precisão as tarifas atualizadas da ANEEL
+
+##13. Escopo Inicial
+O escopo inicial do produto inclui:
+
+- cálculo de viabilidade e ROI
+
+- integração com APIs de índices de irradiação (SWERA/INPE)
+
+- suporte às tarifas das concessionárias brasileiras
+
+- estimativa de payback
+
+- dashboard comparativo responsivo
+
+##14. Fora do Escopo Inicial
+Nesta primeira versão, não fazem parte do escopo:
+
+- venda direta de equipamentos fotovoltaicos
+
+- elaboração de projeto de engenharia para submissão à concessionária
+
+- monitoramento em tempo real do sistema pós-instalação
+
+##15. Resumo Executivo
+O SolarCalc é um simulador web que traz transparência para o mercado de energia fotovoltaica. Ao cruzar dados de consumo, localização e tarifas reais, o sistema permite que proprietários e comerciantes calculem a viabilidade e o tempo de retorno de seus investimentos de forma rápida, acessível e segura, eliminando a incerteza antes da compra de equipamentos.
