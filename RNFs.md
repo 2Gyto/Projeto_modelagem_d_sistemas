@@ -1,27 +1,25 @@
-## RNF01 – Desempenho
+# Requisitos Não Funcionais
+## RNF01. Desempenho e Integração
+O sistema deve processar o cálculo de viabilidade de 25 anos e exibir o dashboard de resultados em, no máximo, 30 segundos.
 
-**Descrição:**
-O sistema deve apresentar o resultado da simulação de viabilidade em até 3 segundos após o envio dos dados pelo usuário.
+Este limite de tempo inclui o processamento interno e as requisições externas em cadeia para a Brasil API, NASA POWER API e Gemini API.
 
-**Categoria:** Desempenho
+## RNF02. Usabilidade e Retenção
+O fluxo de simulação não deve exceder 5 etapas de preenchimento de dados para evitar o abandono do usuário.
 
-**Justificativa:**
-Usuários buscam uma resposta rápida para tomada de decisão. A demora pode gerar abandono da ferramenta.
+Os gráficos do dashboard comparativo devem ser acessíveis, utilizando texturas ou paletas de cores com contraste adequado para daltônicos.
 
-**Critério de Aceitação:**
-Ao inserir consumo mensal e localização, o tempo máximo de processamento não pode ultrapassar 3 segundos.
+## RNF03. Portabilidade e Acessibilidade
+O simulador deve ser uma aplicação web totalmente responsiva.
 
----
+A interface deve adaptar-se adequadamente a resoluções de telas de smartphones, tablets e desktops nos navegadores mais modernos (Chrome, Firefox, Edge e Safari).
 
-## RNF02 – Facilidade de Uso
+## RNF04. Confiabilidade e Padronização de Dados
+O sistema deve apresentar todos os valores financeiros exclusivamente em Real brasileiro (BRL) e medidas físicas no sistema métrico decimal (m²).
 
-**Descrição:**
-O sistema deve permitir que o usuário realize a simulação em no máximo 3 etapas simples, sem necessidade de conhecimento técnico prévio.
+O banco de dados de tarifas das concessionárias de energia deve permitir atualização mensal para refletir as resoluções vigentes da ANEEL.
 
-**Categoria:** Usabilidade
+## RNF05. Tolerância a Falhas (Tratamento de Exceções)
+O sistema deve tratar a indisponibilidade das APIs externas (Brasil API, NASA, Gemini) sem causar o travamento da aplicação.
 
-**Justificativa:**
-O público-alvo possui conhecimento limitado sobre energia solar e prefere soluções intuitivas.
-
-**Critério de Aceitação:**
-Um usuário leigo deve conseguir concluir a simulação sem auxílio externo ou tutorial.
+Caso o tempo limite de resposta (timeout) de 10 segundos de uma API seja atingido, o sistema deve exibir uma mensagem de erro clara ao usuário orientando a tentar novamente mais tarde.
