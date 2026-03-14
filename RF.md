@@ -1,25 +1,83 @@
-# Requisitos Não Funcionais
-### RNF01. Desempenho e Integração
-O sistema deve processar o cálculo de viabilidade de 25 anos e exibir o dashboard de resultados em, no máximo, 30 segundos.
+# Requisitos Funcionais do Sistema Fotovoltaico
 
-Este limite de tempo inclui o processamento interno e as requisições externas em cadeia para a Brasil API, NASA POWER API e Gemini API.
+## RF01 – Coleta de Consumo
+O sistema deve permitir que o usuário insira:
+- A média de consumo mensal de energia em **kWh**, ou
+- O valor médio da conta de energia em **Reais (R$)**.
 
-### RNF02. Usabilidade e Retenção
-O fluxo de simulação não deve exceder 5 etapas de preenchimento de dados para evitar o abandono do usuário.
+Esses dados serão utilizados como base para os cálculos de dimensionamento do sistema fotovoltaico.
 
-Os gráficos do dashboard comparativo devem ser acessíveis, utilizando texturas ou paletas de cores com contraste adequado para daltônicos.
+---
 
-### RNF03. Portabilidade e Acessibilidade
-O simulador deve ser uma aplicação web totalmente responsiva.
+## RF02 – Localização Geográfica
+O sistema deve permitir que o usuário informe:
+- O **CEP**, ou
+- A **cidade**.
 
-A interface deve adaptar-se adequadamente a resoluções de telas de smartphones, tablets e desktops nos navegadores mais modernos (Chrome, Firefox, Edge e Safari).
+A partir dessas informações, o sistema deve buscar automaticamente os **índices de irradiação solar da região**, utilizando o índice **HSP (Hours of Full Sun)**.
 
-### RNF04. Confiabilidade e Padronização de Dados
-O sistema deve apresentar todos os valores financeiros exclusivamente em Real brasileiro (BRL) e medidas físicas no sistema métrico decimal (m²).
+---
 
-O banco de dados de tarifas das concessionárias de energia deve permitir atualização mensal para refletir as resoluções vigentes da ANEEL.
+## RF03 – Especificação de Área
+O sistema deve permitir que o usuário informe:
+- A **área disponível para instalação** dos painéis solares (em m²).
+- A **orientação do telhado**, podendo selecionar entre:
+  - Norte
+  - Sul
+  - Leste
+  - Oeste
 
-### RNF05. Tolerância a Falhas (Tratamento de Exceções)
-O sistema deve tratar a indisponibilidade das APIs externas (Brasil API, NASA, Gemini) sem causar o travamento da aplicação.
+Essas informações serão utilizadas para estimar a capacidade máxima de instalação do sistema.
 
-Caso o tempo limite de resposta (timeout) de 10 segundos de uma API seja atingido, o sistema deve exibir uma mensagem de erro clara ao usuário orientando a tentar novamente mais tarde.
+---
+
+## RF04 – Seleção de Perfil de Conexão
+O sistema deve permitir que o usuário selecione o tipo de conexão elétrica da residência ou estabelecimento:
+
+- Monofásica
+- Bifásica
+- Trifásica
+
+Com base nessa escolha, o sistema deverá considerar a **taxa de disponibilidade da concessionária** no cálculo do consumo mínimo faturado.
+
+---
+
+## RF05 – Cálculo de Geração Estimada
+O sistema deve calcular a **produção mensal estimada de energia** considerando:
+
+- Potência do sistema fotovoltaico selecionado
+- Índice de irradiação solar da região (HSP)
+- Eficiência média do sistema
+
+O resultado deve ser apresentado em **kWh/mês**.
+
+---
+
+## RF06 – Estimativa de Payback
+O sistema deve calcular o **tempo estimado de retorno do investimento (payback)** com base em:
+
+- Custo estimado do sistema fotovoltaico
+- Economia mensal na conta de energia
+- Tarifas energéticas médias
+
+O resultado deve ser apresentado em:
+- **Anos**
+- **Meses**
+
+---
+
+## RF07 – Dashboard Comparativo
+O sistema deve apresentar um **dashboard visual comparativo**, contendo:
+
+- Um **gráfico de custo acumulado ao longo do tempo**
+- Comparação entre:
+  - **Custo acumulado com a concessionária**
+  - **Custo com investimento no sistema fotovoltaico**
+
+O gráfico deve permitir visualizar o ponto em que ocorre o **payback do sistema**.
+
+---
+
+# Observações
+- Todos os cálculos devem considerar valores médios de mercado e parâmetros configuráveis.
+- O sistema deve apresentar os resultados de forma clara e visual para facilitar a tomada de decisão do usuário.
