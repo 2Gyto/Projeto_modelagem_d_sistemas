@@ -1,0 +1,114 @@
+# ADR Nº 01
+
+**Título:** Plataforma Web do Sistema SolarCalc
+**Data:** 20 / 03 / 2026
+**Responsável:** Gabriel Iunis
+**Status:** Proposto
+
+## Contexto
+
+Descreva o problema que exigiu uma decisão técnica.  
+Explique em que momento do projeto essa decisão apareceu e por que ela é importante.
+
+**Perguntas que ajudam no preenchimento:**
+
+- O que precisava ser decidido?
+- Qual era a dúvida da equipe?
+- Que necessidade do sistema motivou essa escolha?
+
+## Decisão
+
+Escreva de forma direta qual decisão foi tomada.
+
+**Exemplos:**
+
+- Foi escolhido o PostgreSQL como banco de dados do sistema.
+- Foi adotada uma arquitetura em camadas.
+- Foi definido o uso de API REST para comunicação entre frontend e backend.
+
+## Justificativa
+
+Explique por que essa decisão foi tomada.
+
+**Pontos que podem aparecer:**
+
+- melhor adequação ao problema
+- simplicidade de implementação
+- facilidade de manutenção
+- desempenho
+- segurança
+- experiência da equipe
+- prazo do projeto
+
+## Alternativas consideradas
+
+Liste outras opções avaliadas e explique, de forma breve, por que não foram escolhidas.
+
+**Exemplos:**
+
+- MySQL
+- MongoDB
+- Firebase
+
+## Consequências
+
+Descreva os efeitos da decisão.
+
+Inclua:
+
+- benefícios esperados
+- limitações
+- impactos para a equipe ou para o sistema
+
+---
+
+## Modelo para preencher
+
+### Contexto
+
+O projeto SolarCalc consiste em um sistema web que permite aos usuários avaliar a viabilidade da instalação de painéis solares em um imóvel. O sistema será acessado por meio de um site, no qual o usuário deverá criar uma conta e realizar login para utilizar as funcionalidades da plataforma.
+
+Após acessar o sistema, o usuário poderá preencher um formulário com informações relevantes para a simulação, como consumo mensal de energia, localização do imóvel e características do telhado, incluindo orientação solar, inclinação, área disponível e presença de sombra.
+
+Essas informações serão utilizadas pelo sistema para estimar a geração de energia solar e calcular indicadores financeiros como economia mensal e tempo de retorno do investimento (payback).
+
+
+### Decisão
+
+Foi decidido que o SolarCalc será desenvolvido exclusivamente como uma aplicação web acessada por meio de um site.
+
+O sistema não terá versão mobile ou aplicativo dedicado para celulares ou tablets, sendo utilizado apenas através de navegadores de internet em computadores.
+
+O site permitirá que usuários cadastrados realizem simulações informando dados do imóvel e do consumo de energia para receber uma análise de viabilidade da instalação de painéis solares.
+
+
+### Justificativa
+
+A escolha por uma aplicação web foi feita por ser a solução mais simples e adequada para o escopo do projeto.
+
+Um sistema acessado por navegador facilita o desenvolvimento e a manutenção da aplicação, além de permitir que usuários utilizem a plataforma sem a necessidade de instalar aplicativos.
+
+Além disso, essa abordagem reduz a complexidade do projeto e permite que a equipe foque no desenvolvimento da funcionalidade principal do sistema, que é a simulação da viabilidade da instalação de sistemas fotovoltaicos.
+
+
+### Alternativas consideradas
+
+- Desenvolvimento de uma planilha automatizada para cálculo da viabilidade solar 
+- Desenvolvimento de uma aplicação desktop instalada no computador do usuário
+- Utilização de calculadoras online simples sem sistema de autenticação
+
+
+
+### Consequências
+
+**Benefícios:**  
+O sistema poderá ser acessado diretamente pelo navegador, sem necessidade de instalação de software adicional.
+
+Além disso, o desenvolvimento focado em uma aplicação web simplifica o projeto e facilita a manutenção do sistema.
+
+
+**Pontos de atenção:**  
+
+Será necessário garantir que o site tenha uma interface clara e fácil de usar para os usuários.
+
+Também será importante garantir que os cálculos de geração de energia e viabilidade financeira sejam baseados em dados confiáveis de incidência solar e parâmetros realistas de sistemas fotovoltaicos.
