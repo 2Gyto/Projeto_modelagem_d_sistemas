@@ -11,7 +11,6 @@ Equipe responsável:
 - Arthur De Almeida Santos
 - Gabriel Andre Iunis De Paula
 - Gabriel Lopes Montalvao
-- Nicoly Araujo de Paschoa
 
 
 ## 2. Visão Geral
