@@ -4,6 +4,8 @@
 O usuário deve informar um valor de consumo mensal válido (em kWh ou em reais) maior que zero.  
 Caso contrário, o sistema deve impedir a simulação.
 
+Quando o consumo for informado em **reais (R$)**, o sistema deve converter para kWh conforme **[RF01.1](RF.md#rf-01-1)** antes de qualquer cálculo de geração ou payback. Se não existir **tarifa de referência aplicável** (por exemplo, dados tarifários indisponíveis para a simulação), o sistema deve **bloquear** a simulação e informar o motivo ao usuário.
+
 ---
 
 ## RB02. Conversão de localização

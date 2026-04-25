@@ -32,6 +32,7 @@ graph TD
 | Requisito Funcional | Regra de Negócio Relacionada | Descrição da Relação |
 |--------------------|------------------------------|----------------------|
 | [RF01 — Coleta de Consumo](RF.md#rf01) | [RB01](RB.md#rb01) | RB01 define que consumo deve ser > 0 para permitir simulação |
+| [RF01.1 — Equivalência em kWh (entrada em reais)](RF.md#rf-01-1) | [RB01](RB.md#rb01) | RB01 obriga conversão R$→kWh pela mesma tarifa usada na projeção; bloqueio se tarifa aplicável inexistir |
 | [RF02 — Localização Geográfica](RF.md#rf02) | [RB02](RB.md#rb02) | RB02 exige CEP válido antes de prosseguir |
 | [RF02 — Localização Geográfica](RF.md#rf02) | [RB03](RB.md#rb03) | RB03 exige dados de irradiação disponíveis para calcular |
 | [RF03 — Especificação de Área](RF.md#rf03) | [RB04](RB.md#rb04) | RB04 limita painéis pela área informada |

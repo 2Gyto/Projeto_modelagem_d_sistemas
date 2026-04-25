@@ -7,6 +7,18 @@ O sistema deve permitir que o usuário insira:
 
 Esses dados serão utilizados como base para os cálculos de dimensionamento do sistema fotovoltaico.
 
+<a id="rf-01-1"></a>
+### RF01.1 – Equivalência em kWh a partir do valor em reais (R$)
+
+Quando o usuário informar apenas o **valor médio da conta em R$**, o sistema deve calcular o **consumo mensal equivalente em kWh** antes de prosseguir com o dimensionamento.
+
+**Regra de cálculo:**  
+`consumo_kwh_mes = valor_medio_conta_reais / tarifa_kwh_aplicada`
+
+Onde `tarifa_kwh_aplicada` é o **preço de referência por kWh (R$/kWh)** utilizado nos cálculos da mesma simulação para comparar o custo com a concessionária (o mesmo registro tarifário vigente aplicado à projeção da fatura “sem solar”), de modo a manter **consistência** entre a conversão R$→kWh e a projeção financeira.
+
+**Transparência:** o sistema deve exibir de forma legível o valor de **kWh/mês** obtido a partir do valor em R$ informado (por exemplo, na etapa de revisão ou no resumo dos resultados).
+
 ---
 
 ## RF02 – Localização Geográfica
