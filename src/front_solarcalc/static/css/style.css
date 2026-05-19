@@ -1,3 +1,7 @@
+html {
+    scroll-behavior: smooth; /* Faz a página deslizar suavemente ao clicar nas âncoras */
+}
+
 /* ================= VARIÁVEIS DE CORES (Baseado no seu design) ================= */
 :root {
     --bg-dark: #172027; /* Cor escura do cabeçalho */
@@ -26,6 +30,20 @@ body {
 .text-solar-brand {
     color: var(--solar-orange);
     letter-spacing: 0.5px;
+}
+
+/* ================= HERO SECTION (Capa com a foto) ================= */
+.hero-section {
+    /* 1. O linear-gradient cria uma sombra de 70% (0.7) sobre a foto para dar leitura ao texto branco.
+       2. Troque 'sua-foto-aqui.jpg' pelo nome exato do seu arquivo de imagem!
+    */
+    background: linear-gradient(rgba(26, 29, 36, 0.7), rgba(26, 29, 36, 0.7)), url('../img/papel__fundo.png');
+    background-size: cover; /* Faz a foto preencher todo o espaço sem distorcer */
+    background-position: center; /* Centraliza o foco da foto */
+    background-repeat: no-repeat;
+    min-height: 88vh; /* Faz a seção ocupar pelo menos 50% da altura da tela */
+    padding: 5rem 0;    /* Empurra o texto mais para baixo (aumente o número se precisar) */
+    margin-top: px;
 }
 
 /* ================= BOTÕES ================= */
