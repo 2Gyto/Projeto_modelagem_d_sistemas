@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SolarCalc - Dashboard de Viabilidade</title>
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <link rel="stylesheet" href="../static/css/style.css">
+</head>
+<body>
+
+    <nav class="navbar navbar-expand-lg navbar-dark navbar-solar py-3 sticky-top">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center" href="index.html">
+                <img src="../static/img/logo_solarcalc_semfundo_ver2.png" alt="Logo SolarCalc" height="45">
+                <span class="fw-bold fs-4 text-solar-brand ms-1">
+                    <span class="text-solar">Solar</span><span class="text-white">Calc</span>
+                </span>
+            </a>
+
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#menuTopo">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="menuTopo">
+                <ul class="navbar-nav ms-auto align-items-center">
+                    <li class="nav-item me-4">
+                        <a class="nav-link text-white" href="index.html#sobre">Sobre</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="index.html#simulador" class="btn btn-solar rounded-pill px-4 fw-bold">Simule agora</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container py-5">
+        <h2 class="fw-bold mb-5 text-center text-dark">
+            Olá, <span id="nomeUsuario" class="text-solar">Visitante</span>! <br>
+            <span class="fs-4 text-muted">Aqui está o seu relatório detalhado de viabilidade.</span>
+        </h2>
+
+        <div class="row g-4 mb-5">
+            <div class="col-md-3">
+                <div class="card card-dashboard text-center h-100 border-solar-bottom">
+                    <div class="card-body p-4">
+                        <i class="fa-solid fa-wallet fa-2x text-solar mb-3"></i>
+                        <p class="text-muted fw-bold mb-1">Investimento Estimado</p>
+                        <h4 class="fw-bold text-dark" id="txt-investimento">--</h4>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-3">
+                <div class="card card-dashboard text-center h-100 border-success-bottom">
+                    <div class="card-body p-4">
+                        <i class="fa-solid fa-clock-rotate-left fa-2x text-success mb-3"></i>
+                        <p class="text-muted fw-bold mb-1">Tempo de Payback</p>
+                        <h4 class="fw-bold text-success" id="txt-payback">--</h4>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-3">
+                <div class="card card-dashboard text-center h-100 border-solar-bottom">
+                    <div class="card-body p-4">
+                        <i class="fa-solid fa-piggy-bank fa-2x text-solar mb-3"></i>
+                        <p class="text-muted fw-bold mb-1">Economia Mensal</p>
+                        <h4 class="fw-bold text-dark" id="txt-economia">--</h4>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-3">
+                <div class="card card-dashboard text-center h-100 border-success-bottom">
+                    <div class="card-body p-4">
+                        <i class="fa-solid fa-arrow-trend-up fa-2x text-success mb-3"></i>
+                        <p class="text-muted fw-bold mb-1">Lucro (25 anos)</p>
+                        <h4 class="fw-bold text-success" id="txt-lucro">--</h4>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row g-4">
+            <div class="col-lg-8">
+                <div class="card card-dashboard p-4 h-100">
+                    <h5 class="fw-bold mb-4 text-dark"><i class="fa-solid fa-chart-line text-solar me-2"></i> Projeção de Retorno (Fluxo de Caixa)</h5>
+                    <canvas id="graficoPayback"></canvas>
+                </div>
+            </div>
+
+            <div class="col-lg-4">
+                <div class="card card-dashboard p-4 h-100 bg-escuro-solar text-white">
+                    <h5 class="fw-bold text-solar mb-4"><i class="fa-solid fa-solar-panel me-2"></i> Especificações</h5>
+                    
+                    <ul class="list-unstyled">
+                        <li class="mb-4 border-bottom border-secondary pb-3">
+                            <span class="text-light">Potência Necessária</span><br>
+                            <strong class="fs-5 text-solar" id="txt-potencia">--</strong>
+                        </li>
+                        <li class="mb-4 border-bottom border-secondary pb-3">
+                            <span class="text-light">Quantidade de Painéis</span><br>
+                            <strong class="fs-5" id="txt-paineis">--</strong>
+                        </li>
+                        <li class="mb-4 border-bottom border-secondary pb-3">
+                            <span class="text-light">Área Mínima de Telhado</span><br>
+                            <strong class="fs-5" id="txt-area">--</strong>
+                        </li>
+                        <li class="mb-2">
+                            <span class="text-light">Marcas Recomendadas</span><br>
+                            <strong class="text-solar" id="txt-marcas">--</strong>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <script src="../static/js/nucleo__simulacao.js"></script>
+    <script src="../static/js/dashboard.js"></script>
+</body>
+</html>

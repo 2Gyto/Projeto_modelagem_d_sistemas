@@ -122,13 +122,15 @@
                     <h3 class="fw-bold mb-4" id="modalLeadLabel">Receba seu relatório completo</h3>
                     <p class="text-muted mb-4">Enviaremos o link do seu dashboard personalizado diretamente para o seu e-mail.</p>
                     
-                    <form>
+                    <form id="formLead">
                         <div class="mb-3">
-                            <input type="text" class="form-control input-solar" placeholder="Nome" name="nome_lead" required>
+                            <input type="text" id="nomeLead" class="form-control input-solar" placeholder="Nome" required>
                         </div>
+                        
                         <div class="mb-4">
-                            <input type="email" class="form-control input-solar" placeholder="Email" name="email_lead" required>
+                            <input type="email" class="form-control input-solar" placeholder="Email" required>
                         </div>
+                        
                         <div class="d-grid">
                             <button type="submit" class="btn btn-solar btn-lg rounded-pill fw-bold">Enviar</button>
                         </div>

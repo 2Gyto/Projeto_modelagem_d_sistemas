@@ -108,3 +108,32 @@ input[type="radio"]:checked + label .icon-tipo {
 input[type="radio"]:checked + label span {
     color: var(--solar-orange);
 }
+
+/* ================= ESTILOS DO DASHBOARD (resultado.html) ================= */
+
+/* Card base com bordas arredondadas e sombra sutil */
+.card-dashboard {
+    border: none;
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    transition: transform 0.3s ease;
+}
+
+/* Efeito de levitar ao passar o mouse sobre os cards superiores */
+.card-dashboard:hover {
+    transform: translateY(-5px);
+}
+
+/* Borda grossa na parte de baixo dos cards para destaque */
+.border-solar-bottom {
+    border-bottom: 5px solid var(--solar-orange) !important;
+}
+
+.border-success-bottom {
+    border-bottom: 5px solid #198754 !important; /* Verde Bootstrap */
+}
+
+/* Fundo do card de especificações técnicas combinando com o cabeçalho */
+.bg-escuro-solar {
+    background-color: var(--bg-dark);
+}

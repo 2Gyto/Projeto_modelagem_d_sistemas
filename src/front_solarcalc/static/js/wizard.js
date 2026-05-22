@@ -49,3 +49,21 @@ function validarEAbrirModal() {
     var meuModal = new bootstrap.Modal(document.getElementById('modalLead'));
     meuModal.show();
 }
+
+// Intercepta o clique de "Enviar" no Modal de Lead
+document.getElementById('formLead').addEventListener('submit', function(event) {
+    event.preventDefault(); // Impede a página de recarregar
+    
+    var nomeUsuario = document.getElementById('nomeLead').value;
+    
+    // Altera o botão para dar um feedback visual legal
+    var btn = this.querySelector('button[type="submit"]');
+    btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Gerando link...';
+    btn.classList.add('disabled');
+
+    // Finge que demorou 1,5 segundos para "enviar o email" e redireciona
+    setTimeout(function() {
+        // Redireciona para o dashboard passando o nome na URL (Ex: resultado.html?nome=Carlos)
+        window.location.href = "resultado.html?nome=" + encodeURIComponent(nomeUsuario);
+    }, 1500);
+});
