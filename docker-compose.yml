@@ -1,0 +1,20 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: solarcalc-db
+    environment:
+      POSTGRES_USER: solarcalc
+      POSTGRES_PASSWORD: solarcalc
+      POSTGRES_DB: solarcalc
+    ports:
+      - "5432:5432"
+    volumes:
+      - solarcalc_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U solarcalc -d solarcalc"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  solarcalc_pgdata:

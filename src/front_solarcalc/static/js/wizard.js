@@ -51,19 +51,50 @@ function validarEAbrirModal() {
 }
 
 // Intercepta o clique de "Enviar" no Modal de Lead
-document.getElementById('formLead').addEventListener('submit', function(event) {
+document.getElementById('formLead').addEventListener('submit', function(event) {    
     event.preventDefault(); // Impede a página de recarregar
     
+    // 1. Captura os dados do formulário principal e do Pop-up
     var nomeUsuario = document.getElementById('nomeLead').value;
-    
+    var valorCep = document.getElementById('cep').value;
+    var valorGasto = document.getElementById('gasto').value;
+    var tipoInstalacao = document.querySelector('input[name="tipo"]:checked').id;
+
+    // 2. Monta o pacote no formato JSON (a linguagem universal da internet)
+    var pacoteDeDados = {
+        nome: nomeUsuario,
+        cep: valorCep,
+        gasto: valorGasto,
+        tipo: tipoInstalacao
+    };
+
     // Altera o botão para dar um feedback visual legal
     var btn = this.querySelector('button[type="submit"]');
-    btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Gerando link...';
+    btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Calculando...';
     btn.classList.add('disabled');
 
-    // Finge que demorou 1,5 segundos para "enviar o email" e redireciona
-    setTimeout(function() {
-        // Redireciona para o dashboard passando o nome na URL (Ex: resultado.html?nome=Carlos)
+    // 3. A PONTE: Envia o pacote para o Back-end do Django
+    // (O Django do seu colega precisará ter uma rota criada chamada '/api/simular/')
+    fetch('http://127.0.0.1:8000/api/v1/simulacoes/teste-integracao', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            // O Django exige um token de segurança chamado CSRF. 
+            // Para testes iniciais, seu colega pode desativar essa exigência na rota dele.
+        },
+        body: JSON.stringify(pacoteDeDados)
+    })
+    .then(response => response.json()) // Espera o Django responder com os cálculos
+    .then(dadosDoBackEnd => {
+        // Quando o Django responder, redirecionamos para o dashboard!
         window.location.href = "resultado.html?nome=" + encodeURIComponent(nomeUsuario);
-    }, 1500);
+    })
+    .catch(erro => {
+        console.error("Erro na integração:", erro);
+        alert("Ops! Houve uma falha ao comunicar com o servidor.");
+        
+        // Volta o botão ao normal em caso de erro
+        btn.innerHTML = 'Enviar';
+        btn.classList.remove('disabled');
+    });
 });
