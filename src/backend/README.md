@@ -59,6 +59,16 @@ Documentação interativa: [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/do
 | GET | `/simulacoes` | Listar simulações do usuário |
 | GET | `/simulacoes/{id}` | Detalhe |
 | POST | `/simulacoes/{id}/executar` | **501** — motor de cálculo (próxima etapa) |
+| POST | `/simulacoes/teste-integracao` | Front: CEP → Brasil API → SQLite (tarifa) → NASA (HSP mensal) |
+| POST | `/simulacoes/hsp` | Somente HSP por CEP (sem tarifa) |
+
+### Tarifas por UF (SQLite)
+
+```bash
+python scripts/seed_tarifas_uf.py
+```
+
+Gera `src/banco_de_dados/tarifas_por_uf.sqlite` a partir de `tarifas_por_uf.sql`.
 
 ## Próximas etapas
 

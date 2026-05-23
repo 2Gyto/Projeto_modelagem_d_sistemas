@@ -2,20 +2,30 @@ import uuid
 
 from fastapi import APIRouter, Depends, HTTPException, status
 
+from app.application.irradiacao_service import IrradiacaoService
 from app.application.simulacao_service import SimulacaoService
 from app.domain.exceptions import DomainError, EntityNotFoundError
 from app.infrastructure.db.models import Usuario
 from app.infrastructure.db.session import get_db
 from app.infrastructure.http.dependencies import get_current_user
-from app.infrastructure.http.schemas import SimulacaoCreate, SimulacaoResponse
+from app.infrastructure.http.schemas import (
+    HspPorCepRequest,
+    HspPorCepResponse,
+    SimulacaoCreate,
+    SimulacaoResponse,
+    SimulacaoTesteRequest,
+)
 from sqlalchemy.orm import Session
-from app.infrastructure.http.schemas import SimulacaoTesteRequest
 
 router = APIRouter(prefix="/simulacoes", tags=["Simulações"])
 
 
 def get_simulacao_service(db: Session = Depends(get_db)) -> SimulacaoService:
     return SimulacaoService(db)
+
+
+def get_irradiacao_service() -> IrradiacaoService:
+    return IrradiacaoService()
 
 
 @router.post("", response_model=SimulacaoResponse, status_code=status.HTTP_201_CREATED)
@@ -80,19 +90,56 @@ def executar_simulacao(
         ),
     )
 
+@router.post("/hsp", response_model=HspPorCepResponse)
+async def obter_hsp_por_cep(
+    body: HspPorCepRequest,
+    service: IrradiacaoService = Depends(get_irradiacao_service),
+) -> HspPorCepResponse:
+    """
+    CEP → Brasil API (coordenadas) → NASA POWER → horas de pico de sol (HSP).
+    """
+    endereco, irradiacao = await service.obter_hsp_por_cep(body.cep)
+    return HspPorCepResponse(
+        cep=endereco.cep,
+        uf=endereco.uf,
+        cidade=endereco.cidade,
+        latitude=endereco.latitude,
+        longitude=endereco.longitude,
+        hsp_mensal=irradiacao.hsp_mensal,
+        hsp_medio_anual=irradiacao.hsp_medio,
+        ano_referencia=irradiacao.ano_referencia,
+    )
+
+
 @router.post("/teste-integracao")
-async def receber_dados_iniciais(dados: SimulacaoTesteRequest):
+async def receber_dados_iniciais(
+    dados: SimulacaoTesteRequest,
+    service: IrradiacaoService = Depends(get_irradiacao_service),
+):
     """
-    Fase 1: Rota temporária para validar a ponte com o Front-end.
+    Ponte com o front: CEP → Brasil API → SQLite (tarifa/UF) → NASA POWER (HSP mensal).
     """
-    print(f"--- NOVA INTEGRAÇÃO RECEBIDA ---")
-    print(f"Usuário: {dados.nome}")
-    print(f"CEP: {dados.cep}")
-    print(f"Gasto Mensal: {dados.gasto}")
-    print(f"Tipo: {dados.tipo}")
-    print(f"--------------------------------")
-    
+    endereco, irradiacao, tarifa = await service.preparar_dados_por_cep(dados.cep)
+
     return {
         "status": "sucesso",
-        "mensagem": f"Dados recebidos perfeitamente, {dados.nome}! A ponte Front-Back está viva."
+        "mensagem": (
+            f"Dados recebidos, {dados.nome}. "
+            f"HSP e tarifa obtidos para {endereco.cidade}/{endereco.uf}."
+        ),
+        "nome": dados.nome,
+        "gasto": dados.gasto,
+        "tipo": dados.tipo,
+        "uf": endereco.uf,
+        "tarifa_kwh": float(tarifa),
+        "localizacao": {
+            "cep": endereco.cep,
+            "uf": endereco.uf,
+            "cidade": endereco.cidade,
+            "latitude": endereco.latitude,
+            "longitude": endereco.longitude,
+        },
+        "hsp_mensal": irradiacao.hsp_mensal,
+        "hsp_medio_anual": irradiacao.hsp_medio,
+        "ano_referencia": irradiacao.ano_referencia,
     }

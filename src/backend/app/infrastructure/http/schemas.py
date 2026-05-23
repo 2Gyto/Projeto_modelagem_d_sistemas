@@ -64,3 +64,22 @@ class SimulacaoTesteRequest(BaseModel):
     cep: str
     gasto: str
     tipo: str
+
+
+class HspPorCepRequest(BaseModel):
+    cep: str = Field(min_length=8, max_length=9)
+
+
+class HspPorCepResponse(BaseModel):
+    cep: str
+    uf: str
+    cidade: str
+    latitude: float
+    longitude: float
+    hsp_mensal: dict[str, float] = Field(
+        description="Média diária de HSP por mês (chave YYYYMM → h/dia)."
+    )
+    hsp_medio_anual: float = Field(
+        description="Média das médias mensais (h/dia) no ano de referência."
+    )
+    ano_referencia: int

@@ -27,6 +27,7 @@ class Settings(BaseSettings):
     brasil_api_base_url: str = "https://brasilapi.com.br/api"
     nasa_power_base_url: str = "https://power.larc.nasa.gov/api"
     gemini_api_key: str = ""
+    tarifas_sqlite_path: str = ""
 
 
 @lru_cache
