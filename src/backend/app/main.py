@@ -1,6 +1,9 @@
+from pathlib import Path
+
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
+from fastapi.staticfiles import StaticFiles
 
 from app.config import get_settings
 from app.domain.exceptions import DomainError, ExternalApiError
@@ -39,7 +42,25 @@ async def external_api_handler(_: Request, exc: ExternalApiError) -> JSONRespons
     )
 
 
+@app.on_event("startup")
+def garantir_tarifas_sqlite() -> None:
+    import sys
+
+    db_path = Path(_settings.tarifas_sqlite_path)
+    if not db_path.exists():
+        backend_root = Path(__file__).resolve().parents[1]
+        if str(backend_root) not in sys.path:
+            sys.path.insert(0, str(backend_root))
+        from scripts.seed_tarifas_uf import main as seed_tarifas
+
+        seed_tarifas()
+
+
 _prefix = _settings.api_prefix
 app.include_router(health.router, prefix=_prefix)
 app.include_router(auth.router, prefix=_prefix)
 app.include_router(simulacoes.router, prefix=_prefix)
+
+_front = Path(__file__).resolve().parents[2] / "front_solarcalc"
+if _front.is_dir():
+    app.mount("/app", StaticFiles(directory=str(_front), html=True), name="frontend")

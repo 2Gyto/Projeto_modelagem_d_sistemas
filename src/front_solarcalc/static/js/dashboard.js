@@ -1,59 +1,113 @@
-// static/js/dashboard.js
+document.addEventListener("DOMContentLoaded", async function () {
+    const nome = localStorage.getItem("solarcalc_usuario_nome") || "Visitante";
+    document.getElementById("nomeUsuario").textContent = nome;
 
-document.addEventListener("DOMContentLoaded", function() {
-    
-    // 1. Pega o Nome da URL (Ex: ?nome=João)
-    const urlParams = new URLSearchParams(window.location.search);
-    const nome = urlParams.get('nome');
-    if (nome) {
-        document.getElementById('nomeUsuario').textContent = nome;
+    const simId = new URLSearchParams(window.location.search).get("id")
+        || localStorage.getItem("solarcalc_simulacao_id");
+
+    let dados = null;
+    const cached = sessionStorage.getItem("solarcalc_resultado");
+    if (cached) {
+        dados = JSON.parse(cached);
+        sessionStorage.removeItem("solarcalc_resultado");
+    } else if (simId && typeof obterSimulacao === "function") {
+        try {
+            dados = await obterSimulacao(simId);
+        } catch (e) {
+            console.error(e);
+            alert("Não foi possível carregar o resultado. Faça uma nova simulação.");
+            window.location.href = "index.html";
+            return;
+        }
     }
 
-    // 2. Chama o nosso NÚCLEO de dados falsos
-    const dados = obterDadosSimulacao();
+    if (!dados || !dados.resultado) {
+        alert("Resultado indisponível. Realize uma simulação.");
+        window.location.href = "index.html";
+        return;
+    }
 
-    // 3. Preenche os Cards
-    document.getElementById('txt-investimento').textContent = dados.resumo.investimento;
-    document.getElementById('txt-payback').textContent = dados.resumo.payback;
-    document.getElementById('txt-economia').textContent = dados.resumo.economia_mensal;
-    document.getElementById('txt-lucro').textContent = dados.resumo.lucro_25_anos;
+    const r = dados.resultado;
+    const loc = dados.localizacao || {};
 
-    // 4. Preenche os Dados Técnicos
-    document.getElementById('txt-potencia').textContent = dados.tecnico.potencia;
-    document.getElementById('txt-paineis').textContent = dados.tecnico.qtd_paineis;
-    document.getElementById('txt-area').textContent = dados.tecnico.area_telhado;
-    document.getElementById('txt-marcas').textContent = dados.tecnico.marcas;
+    document.getElementById("txt-investimento").textContent = formatarMoeda(r.investimento);
+    document.getElementById("txt-payback").textContent = r.payback_texto;
+    document.getElementById("txt-economia").textContent = formatarMoeda(r.economia_mensal);
+    document.getElementById("txt-lucro").textContent = formatarMoeda(r.lucro_25_anos);
 
-    // 5. Desenha o Gráfico de Payback
-    const ctx = document.getElementById('graficoPayback').getContext('2d');
+    document.getElementById("txt-potencia").textContent =
+        r.potencia_kwp ? `${Number(r.potencia_kwp).toFixed(1)} kWp` : "--";
+    document.getElementById("txt-paineis").textContent =
+        r.qtd_paineis ? `${r.qtd_paineis} painéis` : "--";
+    const tel = dados.telhado;
+    document.getElementById("txt-area").textContent = tel
+        ? `${Number(tel.area_m2).toFixed(0)} m² — ${tel.orientacao}`
+        : "--";
+    const elHsp = document.getElementById("txt-hsp");
+    if (elHsp && loc.hsp_medio_dia) {
+        elHsp.textContent = `${Number(loc.hsp_medio_dia).toFixed(2)} h/dia (${loc.cidade || ""}, ${loc.uf || ""})`;
+    }
+    document.getElementById("txt-marcas").textContent = r.marcas || "--";
+
+    const proj = r.projecoes || [];
+    const labels = proj.map((p) => p.ano);
+    const linhaConc = proj.map((p) => Number(p.custo_concessionaria));
+    const linhaSolar = proj.map((p) => Number(p.custo_fotovoltaico));
+
+    const ctx = document.getElementById("graficoPayback").getContext("2d");
     new Chart(ctx, {
-        type: 'line',
+        type: "line",
         data: {
-            labels: dados.grafico.anos_labels,
+            labels,
             datasets: [
                 {
-                    label: 'Custo sem Energia Solar (Conta de Luz)',
-                    data: dados.grafico.linha_concessionaria,
-                    borderColor: '#dc3545', // Vermelho
-                    borderDash: [5, 5], // Linha tracejada
+                    label: "Custo acumulado — concessionária (tracejado)",
+                    data: linhaConc,
+                    borderColor: "#c0392b",
+                    borderDash: [8, 4],
+                    borderWidth: 2,
                     fill: false,
-                    tension: 0.1
+                    tension: 0.15,
+                    pointStyle: "rectRot",
                 },
                 {
-                    label: 'Custo Acumulado com Solar',
-                    data: dados.grafico.linha_solar,
-                    borderColor: '#FF6B00', // Laranja SolarCalc
-                    backgroundColor: 'rgba(255, 107, 0, 0.1)',
+                    label: "Custo acumulado — energia solar",
+                    data: linhaSolar,
+                    borderColor: "#FF6B00",
+                    backgroundColor: "rgba(255, 107, 0, 0.12)",
+                    borderWidth: 3,
                     fill: true,
-                    tension: 0.1
-                }
-            ]
+                    tension: 0.15,
+                    pointStyle: "circle",
+                },
+            ],
         },
         options: {
             responsive: true,
             plugins: {
-                tooltip: { callbacks: { label: function(context) { return 'R$ ' + context.parsed.y; } } }
-            }
-        }
+                legend: { labels: { usePointStyle: true } },
+                tooltip: {
+                    callbacks: {
+                        label: (ctx) =>
+                            `${ctx.dataset.label}: ${formatarMoeda(ctx.parsed.y)}`,
+                    },
+                },
+                annotation: r.ano_payback
+                    ? undefined
+                    : undefined,
+            },
+            scales: {
+                y: {
+                    ticks: {
+                        callback: (v) =>
+                            v.toLocaleString("pt-BR", {
+                                style: "currency",
+                                currency: "BRL",
+                                maximumFractionDigits: 0,
+                            }),
+                    },
+                },
+            },
+        },
     });
 });

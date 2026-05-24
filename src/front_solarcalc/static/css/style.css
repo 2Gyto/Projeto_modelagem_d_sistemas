@@ -27,6 +27,26 @@ body {
     color: var(--solar-orange);
 }
 
+.btn-outline-solar {
+    color: var(--solar-orange);
+    border-color: var(--solar-orange);
+}
+
+.btn-outline-solar:hover,
+.btn-check:checked + .btn-outline-solar {
+    background-color: var(--solar-orange);
+    border-color: var(--solar-orange);
+    color: #fff;
+}
+
+.bg-solar-soft {
+    background-color: rgba(242, 106, 24, 0.15);
+}
+
+.text-solar-title {
+    color: var(--text-dark);
+}
+
 .text-solar-brand {
     color: var(--solar-orange);
     letter-spacing: 0.5px;

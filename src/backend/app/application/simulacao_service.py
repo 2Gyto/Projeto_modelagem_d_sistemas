@@ -1,10 +1,9 @@
-"""Orquestração da simulação — cálculo completo virá nas próximas iterações."""
-
 import uuid
 
 from sqlalchemy import select
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, joinedload
 
+from app.application.simulacao_executor import SimulacaoExecutor
 from app.domain.enums import (
     OrientacaoTelhado,
     StatusSimulacao,
@@ -16,10 +15,18 @@ from app.infrastructure.db.models import (
     DadosConsumo,
     DadosTelhado,
     Localizacao,
+    Resultado,
     Simulacao,
     Usuario,
 )
-from app.infrastructure.http.schemas import SimulacaoCreate
+from app.infrastructure.http.schemas import (
+    LocalizacaoResponse,
+    ProjecaoAnualResponse,
+    ResultadoDetalheResponse,
+    SimulacaoCreate,
+    SimulacaoDetalheResponse,
+    TelhadoResponse,
+)
 
 
 class SimulacaoService:
@@ -35,7 +42,7 @@ class SimulacaoService:
             orientacao = OrientacaoTelhado(dados.orientacao.upper())
             tipo_conexao = TipoConexao(dados.tipo_conexao.upper())
         except ValueError as exc:
-            raise DomainError("Enum de entrada inválido.") from exc
+            raise DomainError("Valor de enum inválido.") from exc
 
         sim = Simulacao(usuario_id=usuario.id, status=StatusSimulacao.INICIADA)
         self._db.add(sim)
@@ -52,8 +59,7 @@ class SimulacaoService:
         self._db.add(
             Localizacao(
                 simulacao_id=sim.id,
-                cep=dados.cep,
-                cidade=dados.cidade,
+                cep="".join(c for c in dados.cep if c.isdigit()),
             )
         )
         self._db.add(
@@ -68,6 +74,17 @@ class SimulacaoService:
         self._db.refresh(sim)
         return sim
 
+    async def criar_e_executar(
+        self, usuario: Usuario, dados: SimulacaoCreate
+    ) -> Simulacao:
+        sim = self.criar_rascunho(usuario, dados)
+        executor = SimulacaoExecutor(self._db)
+        return await executor.executar(usuario.id, sim.id)
+
+    async def executar(self, usuario_id: uuid.UUID, simulacao_id: uuid.UUID) -> Simulacao:
+        executor = SimulacaoExecutor(self._db)
+        return await executor.executar(usuario_id, simulacao_id)
+
     def listar_do_usuario(self, usuario_id: uuid.UUID) -> list[Simulacao]:
         stmt = (
             select(Simulacao)
@@ -76,8 +93,96 @@ class SimulacaoService:
         )
         return list(self._db.scalars(stmt).all())
 
-    def obter(self, usuario_id: uuid.UUID, simulacao_id: uuid.UUID) -> Simulacao:
-        sim = self._db.get(Simulacao, simulacao_id)
-        if not sim or sim.usuario_id != usuario_id:
+    def obter_detalhe(
+        self, usuario_id: uuid.UUID, simulacao_id: uuid.UUID
+    ) -> SimulacaoDetalheResponse:
+        stmt = (
+            select(Simulacao)
+            .where(
+                Simulacao.id == simulacao_id,
+                Simulacao.usuario_id == usuario_id,
+            )
+            .options(
+                joinedload(Simulacao.localizacao),
+                joinedload(Simulacao.dados_consumo),
+                joinedload(Simulacao.dados_telhado),
+                joinedload(Simulacao.resultado).joinedload(Resultado.projecoes),
+            )
+        )
+        sim = self._db.scalars(stmt).first()
+        if not sim:
             raise EntityNotFoundError("Simulação não encontrada.")
-        return sim
+        return self._to_detalhe(sim)
+
+    @staticmethod
+    def _to_detalhe(sim: Simulacao) -> SimulacaoDetalheResponse:
+        loc_resp = None
+        if sim.localizacao:
+            loc = sim.localizacao
+            loc_resp = LocalizacaoResponse(
+                cep=loc.cep,
+                uf=loc.uf,
+                cidade=loc.cidade,
+                latitude=loc.latitude,
+                longitude=loc.longitude,
+                hsp_medio_dia=loc.hsp_medio_dia,
+                tarifa_kwh=loc.tarifa_kwh_usada,
+            )
+
+        res_resp = None
+        if sim.resultado:
+            r = sim.resultado
+            anos = int(r.payback_anos or 0)
+            meses = int(r.payback_meses or 0)
+            payback_texto = (
+                f"{anos} ano(s) e {meses} mês(es)"
+                if meses
+                else f"{anos} ano(s)"
+            )
+            projecoes = sorted(r.projecoes, key=lambda p: p.ano)
+            consumo_kwh = (
+                sim.dados_consumo.consumo_kwh if sim.dados_consumo else None
+            )
+
+            from app.config import get_settings
+
+            res_resp = ResultadoDetalheResponse(
+                geracao_kwh_mes=r.geracao_kwh,
+                potencia_kwp=r.potencia_kwp,
+                qtd_paineis=r.qtd_paineis,
+                economia_mensal=r.economia_mensal,
+                investimento=r.custo_total,
+                payback_anos=anos,
+                payback_meses=meses,
+                payback_texto=payback_texto,
+                lucro_25_anos=r.lucro_25_anos,
+                ano_payback=r.ano_payback,
+                marcas=get_settings().marcas_paineis,
+                consumo_kwh_mes=consumo_kwh,
+                projecoes=[
+                    ProjecaoAnualResponse(
+                        ano=p.ano,
+                        custo_concessionaria=p.custo_concessionaria,
+                        custo_fotovoltaico=p.custo_fotovoltaico,
+                    )
+                    for p in projecoes
+                ],
+            )
+
+        tel_resp = None
+        if sim.dados_telhado:
+            t = sim.dados_telhado
+            tel_resp = TelhadoResponse(
+                area_m2=t.area_m2,
+                orientacao=t.orientacao.value,
+                tipo_conexao=t.tipo_conexao.value,
+            )
+
+        return SimulacaoDetalheResponse(
+            id=sim.id,
+            status=sim.status,
+            realizada_em=sim.realizada_em,
+            localizacao=loc_resp,
+            telhado=tel_resp,
+            resultado=res_resp,
+        )

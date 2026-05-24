@@ -1,6 +1,9 @@
 from functools import lru_cache
+from pathlib import Path
 
 from pydantic_settings import BaseSettings, SettingsConfigDict
+
+_BACKEND_ROOT = Path(__file__).resolve().parent.parent
 
 
 class Settings(BaseSettings):
@@ -26,6 +29,21 @@ class Settings(BaseSettings):
 
     brasil_api_base_url: str = "https://brasilapi.com.br/api"
     nasa_power_base_url: str = "https://power.larc.nasa.gov/api"
+
+    tarifas_sqlite_path: str = str(_BACKEND_ROOT / "data" / "tarifas_uf.db")
+
+    # Motor de cálculo (valores médios de mercado — configuráveis)
+    area_por_painel_m2: float = 1.7
+    potencia_painel_kw: float = 0.55
+    preco_painel_brl: float = 850.0
+    eficiencia_sistema: float = 0.78
+    inflacao_energia_anual: float = 0.05
+    manutencao_anual_pct: float = 0.01
+    anos_projecao: int = 25
+    marcas_paineis: str = "Canadian Solar, Jinko Solar, Longi Solar"
+    nasa_start_year: int = 2019
+    nasa_end_year: int = 2023
+
     gemini_api_key: str = ""
 
 

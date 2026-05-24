@@ -108,8 +108,11 @@ class Localizacao(Base):
     )
     cep: Mapped[str | None] = mapped_column(String(9))
     cidade: Mapped[str | None] = mapped_column(String(100))
+    uf: Mapped[str | None] = mapped_column(String(2))
     latitude: Mapped[Decimal | None] = mapped_column(Numeric(10, 8))
     longitude: Mapped[Decimal | None] = mapped_column(Numeric(11, 8))
+    hsp_medio_dia: Mapped[Decimal | None] = mapped_column(Numeric(6, 3))
+    tarifa_kwh_usada: Mapped[Decimal | None] = mapped_column(Numeric(8, 4))
 
     simulacao: Mapped["Simulacao"] = relationship(back_populates="localizacao")
 
@@ -150,7 +153,11 @@ class Resultado(Base):
         nullable=False,
     )
     geracao_kwh: Mapped[Decimal | None] = mapped_column(Numeric(10, 2))
+    potencia_kwp: Mapped[Decimal | None] = mapped_column(Numeric(8, 2))
+    qtd_paineis: Mapped[int | None] = mapped_column(Integer)
     economia_mensal: Mapped[Decimal | None] = mapped_column(Numeric(10, 2))
+    lucro_25_anos: Mapped[Decimal | None] = mapped_column(Numeric(14, 2))
+    ano_payback: Mapped[int | None] = mapped_column(Integer)
     payback_anos: Mapped[Decimal | None] = mapped_column(Numeric(6, 2))
     payback_meses: Mapped[Decimal | None] = mapped_column(Numeric(6, 2))
     custo_total: Mapped[Decimal | None] = mapped_column(Numeric(12, 2))

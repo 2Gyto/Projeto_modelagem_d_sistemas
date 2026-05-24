@@ -3,11 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SolarCalc</title>
-    
+    <title>SolarCalc — Simulador Fotovoltaico</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
     <link rel="stylesheet" href="../static/css/style.css">
 </head>
 <body>
@@ -15,126 +13,141 @@
     <nav class="navbar navbar-expand-lg navbar-dark navbar-solar py-3 sticky-top">
         <div class="container">
             <a class="navbar-brand d-flex align-items-center" href="#">
-                
                 <img src="../static/img/logo_solarcalc_semfundo_ver2.png" alt="Logo SolarCalc" height="45">
-                
                 <span class="fw-bold fs-4 text-solar-brand ms-1">
                     <span class="text-solar">Solar</span><span class="text-white">Calc</span>
                 </span>
-                
             </a>
-
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#menuTopo">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-
-            <div class="collapse navbar-collapse" id="menuTopo">
-                <ul class="navbar-nav ms-auto align-items-center">
-                    <li class="nav-item me-4">
-                        <a class="nav-link text-white" href="#sobre">Sobre</a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="#simulador" class="btn btn-solar rounded-pill px-4 fw-bold">Simule agora</a>
-                    </li>
-                </ul>
+            <div class="ms-auto">
+                <span class="text-white-50 small me-2" id="usuarioLogado"></span>
+                <button type="button" class="btn btn-outline-light btn-sm rounded-pill" id="btnAuth">
+                    Entrar
+                </button>
             </div>
         </div>
     </nav>
 
     <header class="hero-section text-center text-white d-flex align-items-center">
         <div class="container">
-            <h1 class="display-4 fw-bold mb-3">Descubra o Poder da Energia Solar</h1>
-            <p class="lead mb-4">Simule a viabilidade financeira do seu imóvel em segundos e descubra em quanto tempo o seu investimento se paga.</p>
-            <a href="#simulador" class="btn btn-solar btn-lg rounded-pill px-5 fw-bold shadow">Começar Simulação</a>
+            <h1 class="display-5 fw-bold mb-3">Descubra o Poder da Energia Solar</h1>
+            <p class="lead mb-4">Simulação com dados reais: Brasil API, tarifa por UF e irradiação NASA POWER.</p>
+            <a href="#simulador" class="btn btn-solar btn-lg rounded-pill px-5 fw-bold shadow">Começar</a>
         </div>
     </header>
 
     <main class="container py-5" id="simulador">
         <div class="row justify-content-center">
-            <div class="col-lg-7 col-md-9">
-                
+            <div class="col-lg-8">
                 <div class="card card-simulador border-0 shadow-lg">
-                    <div class="card-body p-5">
-                        
+                    <div class="card-body p-4 p-md-5">
+                        <div class="d-flex justify-content-between mb-4">
+                            <span class="badge bg-solar-soft text-solar fw-bold" id="etapaBadge">Etapa 1 de 5</span>
+                            <div class="progress flex-grow-1 ms-3" style="height: 8px;">
+                                <div class="progress-bar bg-solar" id="barraProgresso" style="width: 20%"></div>
+                            </div>
+                        </div>
+
                         <form id="formSimulacao">
-                            <div class="mb-4 text-center">
-                                <label class="form-label fw-bold text-solar-title mb-3">1- Selecione o tipo de instalação desejada?</label>
-                                <div class="d-flex justify-content-center gap-4">
-                                    
-                                    <div class="opcao-instalacao">
-                                        <input type="radio" name="tipo" id="residencial" checked class="d-none">
-                                        <label for="residencial" class="text-center cursor-pointer">
-                                            <i class="fa-solid fa-house fa-2x mb-2 icon-tipo"></i>
-                                            <span class="d-block fw-bold">Residencial</span>
-                                        </label>
-                                    </div>
-
-                                    <div class="opcao-instalacao">
-                                        <input type="radio" name="tipo" id="empresarial" class="d-none">
-                                        <label for="empresarial" class="text-center cursor-pointer">
-                                            <i class="fa-solid fa-building fa-2x mb-2 icon-tipo"></i>
-                                            <span class="d-block fw-bold">Empresarial</span>
-                                        </label>
-                                    </div>
-
-                                    <div class="opcao-instalacao">
-                                        <input type="radio" name="tipo" id="agronegocio" class="d-none">
-                                        <label for="agronegocio" class="text-center cursor-pointer">
-                                            <i class="fa-solid fa-tractor fa-2x mb-2 icon-tipo"></i>
-                                            <span class="d-block fw-bold">Agronegócio</span>
-                                        </label>
-                                    </div>
-
+                            <div class="etapa" data-etapa="1">
+                                <h5 class="fw-bold text-solar-title mb-3">1. Como deseja informar o consumo?</h5>
+                                <div class="btn-group w-100 mb-3" role="group">
+                                    <input type="radio" class="btn-check" name="tipoEntrada" id="entradaReais" value="REAIS" checked>
+                                    <label class="btn btn-outline-solar" for="entradaReais">Valor da conta (R$)</label>
+                                    <input type="radio" class="btn-check" name="tipoEntrada" id="entradaKwh" value="KWH">
+                                    <label class="btn btn-outline-solar" for="entradaKwh">Consumo (kWh)</label>
+                                </div>
+                                <div id="campoReais">
+                                    <label class="form-label fw-bold">Gasto médio mensal (R$)</label>
+                                    <input type="text" class="form-control input-solar" id="valorReais" placeholder="R$ 0,00">
+                                </div>
+                                <div id="campoKwh" class="d-none">
+                                    <label class="form-label fw-bold">Consumo médio mensal (kWh)</label>
+                                    <input type="number" class="form-control input-solar" id="consumoKwh" min="1" step="1" placeholder="Ex: 350">
                                 </div>
                             </div>
 
-                            <div class="mb-4 text-center">
-                                <label for="cep" class="form-label fw-bold text-solar-title">2- Qual é o CEP do local da instalação?</label>
-                                <input type="text" class="form-control input-solar text-center" id="cep" name="cep" placeholder="00000-000">
+                            <div class="etapa d-none" data-etapa="2">
+                                <h5 class="fw-bold text-solar-title mb-3">2. CEP do local da instalação</h5>
+                                <input type="text" class="form-control input-solar text-center" id="cep" placeholder="00000-000" maxlength="9">
+                                <p class="text-muted small mt-2">Usamos a Brasil API (CEP v2) para obter latitude, longitude e UF.</p>
                             </div>
 
-                            <div class="mb-5 text-center">
-                                <label for="gasto" class="form-label fw-bold text-solar-title">3- Qual é o seu gasto Médio Mensal(R$)</label>
-                                <input type="text" class="form-control input-solar text-center" id="gasto" name="gasto" placeholder="R$ 0,00">
+                            <div class="etapa d-none" data-etapa="3">
+                                <h5 class="fw-bold text-solar-title mb-3">3. Área disponível no telhado</h5>
+                                <label class="form-label fw-bold">Área (m²)</label>
+                                <input type="number" class="form-control input-solar" id="areaM2" min="5" step="0.1" placeholder="Ex: 25">
                             </div>
 
-                            <div class="d-grid d-flex justify-content-center">
-                                <button type="button" class="btn btn-solar btn-lg rounded-pill px-5 fw-bold" onclick="validarEAbrirModal()">
-                                    Simular
+                            <div class="etapa d-none" data-etapa="4">
+                                <h5 class="fw-bold text-solar-title mb-3">4. Orientação do telhado</h5>
+                                <select class="form-select input-solar" id="orientacao">
+                                    <option value="NORTE">Norte (ideal)</option>
+                                    <option value="LESTE">Leste</option>
+                                    <option value="OESTE">Oeste</option>
+                                    <option value="SUL">Sul</option>
+                                </select>
+                            </div>
+
+                            <div class="etapa d-none" data-etapa="5">
+                                <h5 class="fw-bold text-solar-title mb-3">5. Tipo de conexão elétrica</h5>
+                                <select class="form-select input-solar" id="tipoConexao">
+                                    <option value="MONOFASICA">Monofásica</option>
+                                    <option value="BIFASICA">Bifásica</option>
+                                    <option value="TRIFASICA">Trifásica</option>
+                                </select>
+                                <p class="text-muted small mt-2">A taxa mínima de disponibilidade da concessionária entra no cálculo.</p>
+                            </div>
+
+                            <div class="d-flex justify-content-between mt-4">
+                                <button type="button" class="btn btn-outline-secondary rounded-pill px-4" id="btnVoltar" disabled>
+                                    Voltar
+                                </button>
+                                <button type="button" class="btn btn-solar rounded-pill px-4 fw-bold" id="btnAvancar">
+                                    Avançar
                                 </button>
                             </div>
                         </form>
-
+                        <div id="msgErro" class="alert alert-danger mt-3 d-none" role="alert"></div>
                     </div>
                 </div>
-
             </div>
         </div>
     </main>
 
-    <div class="modal fade" id="modalLead" tabindex="-1" aria-labelledby="modalLeadLabel" aria-hidden="true">
+    <div class="modal fade" id="modalAuth" tabindex="-1">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content rounded-4 border-0 shadow">
-                <div class="modal-header border-0 pb-0">
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <div class="modal-header border-0">
+                    <h5 class="modal-title fw-bold">Acesse sua conta</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
-                <div class="modal-body text-center p-4 pt-0">
-                    <h3 class="fw-bold mb-4" id="modalLeadLabel">Receba seu relatório completo</h3>
-                    <p class="text-muted mb-4">Enviaremos o link do seu dashboard personalizado diretamente para o seu e-mail.</p>
-                    
-                    <form id="formLead">
-                        <div class="mb-3">
-                            <input type="text" id="nomeLead" class="form-control input-solar" placeholder="Nome" required>
+                <div class="modal-body">
+                    <ul class="nav nav-pills nav-fill mb-3" id="authTabs">
+                        <li class="nav-item">
+                            <button class="nav-link active" data-bs-toggle="pill" data-bs-target="#painelLogin">Login</button>
+                        </li>
+                        <li class="nav-item">
+                            <button class="nav-link" data-bs-toggle="pill" data-bs-target="#painelCadastro">Cadastro</button>
+                        </li>
+                    </ul>
+                    <div class="tab-content">
+                        <div class="tab-pane fade show active" id="painelLogin">
+                            <form id="formLogin">
+                                <input type="email" class="form-control input-solar mb-2" id="loginEmail" placeholder="E-mail" required>
+                                <input type="password" class="form-control input-solar mb-3" id="loginSenha" placeholder="Senha" required>
+                                <button type="submit" class="btn btn-solar w-100 rounded-pill fw-bold">Entrar</button>
+                            </form>
                         </div>
-                        
-                        <div class="mb-4">
-                            <input type="email" class="form-control input-solar" placeholder="Email" required>
+                        <div class="tab-pane fade" id="painelCadastro">
+                            <form id="formCadastro">
+                                <input type="text" class="form-control input-solar mb-2" id="cadNome" placeholder="Nome" required>
+                                <input type="email" class="form-control input-solar mb-2" id="cadEmail" placeholder="E-mail" required>
+                                <input type="password" class="form-control input-solar mb-3" id="cadSenha" placeholder="Senha (mín. 8)" minlength="8" required>
+                                <button type="submit" class="btn btn-solar w-100 rounded-pill fw-bold">Criar conta</button>
+                            </form>
                         </div>
-                        
-                        <div class="d-grid">
-                            <button type="submit" class="btn btn-solar btn-lg rounded-pill fw-bold">Enviar</button>
-                        </div>
-                    </form>
+                    </div>
+                    <div id="authErro" class="alert alert-danger mt-2 d-none small"></div>
                 </div>
             </div>
         </div>
@@ -142,7 +155,7 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://unpkg.com/imask"></script>
+    <script src="../static/js/api.js"></script>
     <script src="../static/js/wizard.js"></script>
-    
 </body>
 </html>

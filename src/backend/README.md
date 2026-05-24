@@ -1,24 +1,28 @@
 # SolarCalc — Backend API
 
-API REST em **Python + FastAPI**, monólito em camadas (ADR-02), persistência **PostgreSQL** (ADR-06).
+API REST em **Python + FastAPI**, monólito em camadas (ADR-02), persistência **PostgreSQL** (ADR-06), tarifas por UF em **SQLite**.
+
+## Pipeline de simulação (`POST /simulacoes/completa`)
+
+1. **Brasil API** — `GET /cep/v2/{cep}` → latitude, longitude, UF  
+2. **SQLite** — tarifa e taxas de disponibilidade por UF  
+3. **NASA POWER** — irradiação mensal → **HSP** médio (h/dia)  
+4. **Motor de cálculo** — geração, investimento, payback, projeção 25 anos  
 
 ## Estrutura
 
 ```
 app/
-├── domain/           # enums e exceções de negócio
-├── application/    # casos de uso (auth, simulação)
+├── application/     # auth, simulação, cálculo, executor
+├── domain/
 ├── infrastructure/
-│   ├── db/         # SQLAlchemy + modelos
-│   ├── http/       # rotas FastAPI
-│   └── external/   # clientes Brasil API / NASA (Gemini na próxima etapa)
-└── main.py
+│   ├── db/          # PostgreSQL + tarifa_sqlite.py
+│   └── external/    # Brasil API, NASA POWER
+data/
+  tarifas_uf.db      # seed automático no startup se ausente
+scripts/
+  seed_tarifas_uf.py
 ```
-
-## Pré-requisitos
-
-- Python 3.11+
-- Docker (para PostgreSQL) ou instância local do Postgres 16
 
 ## Subir o banco
 
@@ -28,7 +32,7 @@ Na raiz do repositório:
 docker compose up -d
 ```
 
-## Instalação e migração
+## Instalação
 
 ```bash
 cd src/backend
@@ -36,33 +40,25 @@ python -m venv .venv
 .venv\Scripts\activate
 pip install -r requirements.txt
 copy .env.example .env
+python scripts/seed_tarifas_uf.py
 alembic upgrade head
 ```
 
-## Executar a API
+## Executar
 
 ```bash
 uvicorn app.main:app --reload --app-dir .
 ```
 
-Documentação interativa: [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs)
+- API: http://127.0.0.1:8000/docs  
+- Front (estático): http://127.0.0.1:8000/app/templates/index.html  
 
-## Endpoints (prefixo `/api/v1`)
+## Endpoints principais
 
 | Método | Caminho | Descrição |
 |--------|---------|-----------|
-| GET | `/health` | Saúde da API |
 | POST | `/auth/register` | Cadastro |
-| POST | `/auth/login` | Login (JWT) |
-| GET | `/auth/me` | Perfil (Bearer) |
-| POST | `/simulacoes` | Criar rascunho de simulação |
-| GET | `/simulacoes` | Listar simulações do usuário |
-| GET | `/simulacoes/{id}` | Detalhe |
-| POST | `/simulacoes/{id}/executar` | **501** — motor de cálculo (próxima etapa) |
-
-## Próximas etapas
-
-1. Motor de cálculo (RF05–RF07, RB01–RB10)
-2. Integração completa Brasil API → NASA POWER → Gemini
-3. Seed de `tarifas_concessionarias`
-4. Conectar o frontend (`front_solarcalc`) à API
+| POST | `/auth/login` | JWT |
+| POST | `/simulacoes/completa` | Cria + executa pipeline |
+| POST | `/simulacoes/{id}/executar` | Executa rascunho existente |
+| GET | `/simulacoes/{id}` | Resultado com projeções 25 anos |
