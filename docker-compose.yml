@@ -16,5 +16,21 @@ services:
       timeout: 5s
       retries: 5
 
+  backend:
+    build:
+      context: ./src/backend
+      dockerfile: Dockerfile
+    container_name: solarcalc-backend
+    depends_on:
+      - postgres
+    environment:
+      - DATABASE_URL=postgresql+psycopg://solarcalc:solarcalc@postgres:5432/solarcalc
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./src/backend:/app
+      - ./src/front_solarcalc:/app/front_solarcalc
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+
 volumes:
   solarcalc_pgdata:

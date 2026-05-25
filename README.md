@@ -152,3 +152,46 @@ Nesta primeira versão, não fazem parte do escopo:
 
 ## 15. Resumo Executivo
 O SolarCalc é um simulador web que traz transparência para o mercado de energia fotovoltaica. Ao cruzar dados de consumo com coordenadas geográficas exatas (Brasil API), dados climáticos da agência espacial americana (NASA POWER API) e inteligência artificial para cotação de equipamentos (Gemini API), o sistema permite que proprietários e comerciantes calculem a viabilidade e o tempo de retorno de seus investimentos de forma rápida, acessível e segura, eliminando a incerteza antes da compra.
+
+## Como rodar o projeto (rápido)
+
+### Usando Docker Compose (recomendado)
+
+1. No diretório raiz do projeto rode:
+
+```powershell
+docker-compose up --build
+```
+
+2. A API ficará disponível em `http://localhost:8000` e o frontend será servido em `http://localhost:8000/app`.
+
+### Rodando localmente (sem Docker)
+
+1. Crie e ative um ambiente virtual Python 3.12+.
+
+```powershell
+python -m venv .venv
+.\.venv\Scripts\Activate.ps1   # PowerShell
+pip install -r src/backend/requirements.txt
+```
+
+2. Gere o banco de tarifas (SQLite) e/ou configure o PostgreSQL conforme necessário:
+
+```powershell
+# cria/atualiza src/backend/data/tarifas_uf.db
+python src/backend/scripts/seed_tarifas_uf.py
+
+# (opcional) Para usar PostgreSQL, exporte a variável DATABASE_URL apontando para seu container/postgres
+$env:DATABASE_URL = 'postgresql+psycopg://solarcalc:solarcalc@localhost:5432/solarcalc'
+```
+
+3. Rode a API:
+
+```powershell
+cd src/backend
+uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
+```
+
+4. Abra o frontend em `http://localhost:8000/app`.
+
+Se quiser, eu posso adaptar o `docker-compose.yml` para rodar também um serviço front separado (por exemplo, um servidor estático Nginx) ou incluir variáveis de ambiente adicionais para produção.
