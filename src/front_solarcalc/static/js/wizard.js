@@ -50,51 +50,51 @@ function validarEAbrirModal() {
     meuModal.show();
 }
 
-// Intercepta o clique de "Enviar" no Modal de Lead
-document.getElementById('formLead').addEventListener('submit', function(event) {    
-    event.preventDefault(); // Impede a página de recarregar
-    
-    // 1. Captura os dados do formulário principal e do Pop-up
-    var nomeUsuario = document.getElementById('nomeLead').value;
-    var valorCep = document.getElementById('cep').value;
-    var valorGasto = document.getElementById('gasto').value;
-    var tipoInstalacao = document.querySelector('input[name="tipo"]:checked').id;
+// Intercepta o lead: autenticação fantasma → rascunho da simulação → redirecionamento
+document.addEventListener("DOMContentLoaded", function() {
+    var formLead = document.getElementById("formLead");
+    if (!formLead) {
+        return;
+    }
 
-    // 2. Monta o pacote no formato JSON (a linguagem universal da internet)
-    var pacoteDeDados = {
-        nome: nomeUsuario,
-        cep: valorCep,
-        gasto: valorGasto,
-        tipo: tipoInstalacao
-    };
+    formLead.addEventListener("submit", async function(event) {
+        event.preventDefault();
 
-    // Altera o botão para dar um feedback visual legal
-    var btn = this.querySelector('button[type="submit"]');
-    btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Calculando...';
-    btn.classList.add('disabled');
+        var nomeUsuario = document.getElementById("nomeLead").value.trim();
+        var emailUsuario = document.getElementById("emailLead").value.trim();
+        var valorCep = document.getElementById("cep").value;
+        var valorGasto = document.getElementById("gasto").value;
+        var tipoInstalacao = document.querySelector('input[name="tipo"]:checked').id;
 
-    // 3. A PONTE: Envia o pacote para o Back-end do Django
-    // (O Django do seu colega precisará ter uma rota criada chamada '/api/simular/')
-    fetch('http://127.0.0.1:8000/api/v1/simulacoes/teste-integracao', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            // O Django exige um token de segurança chamado CSRF. 
-            // Para testes iniciais, seu colega pode desativar essa exigência na rota dele.
-        },
-        body: JSON.stringify(pacoteDeDados)
-    })
-    .then(response => response.json()) // Espera o Django responder com os cálculos
-    .then(dadosDoBackEnd => {
-        // Quando o Django responder, redirecionamos para o dashboard!
-        window.location.href = "resultado.html?nome=" + encodeURIComponent(nomeUsuario);
-    })
-    .catch(erro => {
-        console.error("Erro na integração:", erro);
-        alert("Ops! Houve uma falha ao comunicar com o servidor.");
-        
-        // Volta o botão ao normal em caso de erro
-        btn.innerHTML = 'Enviar';
-        btn.classList.remove('disabled');
+        var btn = this.querySelector('button[type="submit"]');
+        var textoOriginal = btn.innerHTML;
+        btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Calculando...';
+        btn.disabled = true;
+        btn.classList.add("disabled");
+
+        try {
+            // 1) Register (ignora conflito) + login → token em localStorage
+            await autenticarPorEmail(nomeUsuario, emailUsuario);
+
+            // 2) Cria rascunho, executa cálculo (Authorization: Bearer) e persiste ID
+            var simulacaoId = await criarEExecutarSimulacao({
+                cep: valorCep,
+                gasto: valorGasto,
+                tipo: tipoInstalacao,
+            });
+
+            localStorage.setItem("simulacao_id", simulacaoId);
+
+            // 3) Redireciona somente após token e simulacao_id disponíveis
+            var destino = "resultado.html?nome=" + encodeURIComponent(nomeUsuario);
+            destino += "&simulacao_id=" + encodeURIComponent(simulacaoId);
+            window.location.href = destino;
+        } catch (erro) {
+            console.error("Erro na integração:", erro);
+            alert(erro.message || "Ops! Houve uma falha ao comunicar com o servidor.");
+            btn.innerHTML = textoOriginal;
+            btn.disabled = false;
+            btn.classList.remove("disabled");
+        }
     });
 });

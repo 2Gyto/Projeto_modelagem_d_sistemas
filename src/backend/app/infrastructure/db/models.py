@@ -108,8 +108,11 @@ class Localizacao(Base):
     )
     cep: Mapped[str | None] = mapped_column(String(9))
     cidade: Mapped[str | None] = mapped_column(String(100))
+    estado: Mapped[str | None] = mapped_column(String(2))
     latitude: Mapped[Decimal | None] = mapped_column(Numeric(10, 8))
     longitude: Mapped[Decimal | None] = mapped_column(Numeric(11, 8))
+    hsp: Mapped[Decimal | None] = mapped_column(Numeric(6, 2))
+    tarifa_kwh: Mapped[Decimal | None] = mapped_column(Numeric(8, 4))
 
     simulacao: Mapped["Simulacao"] = relationship(back_populates="localizacao")
 
@@ -149,11 +152,16 @@ class Resultado(Base):
         unique=True,
         nullable=False,
     )
+    potencia_kwp: Mapped[Decimal | None] = mapped_column(Numeric(8, 2))
+    quantidade_paineis: Mapped[int | None] = mapped_column(Integer)
+    area_minima_m2: Mapped[Decimal | None] = mapped_column(Numeric(8, 2))
     geracao_kwh: Mapped[Decimal | None] = mapped_column(Numeric(10, 2))
     economia_mensal: Mapped[Decimal | None] = mapped_column(Numeric(10, 2))
     payback_anos: Mapped[Decimal | None] = mapped_column(Numeric(6, 2))
     payback_meses: Mapped[Decimal | None] = mapped_column(Numeric(6, 2))
     custo_total: Mapped[Decimal | None] = mapped_column(Numeric(12, 2))
+    marcas_recomendadas: Mapped[str | None] = mapped_column(Text)
+    observacao_gemini: Mapped[str | None] = mapped_column(Text)
 
     simulacao: Mapped["Simulacao"] = relationship(back_populates="resultado")
     projecoes: Mapped[list["ProjecaoAnual"]] = relationship(back_populates="resultado")

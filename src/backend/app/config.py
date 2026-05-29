@@ -1,11 +1,19 @@
 from functools import lru_cache
+from pathlib import Path
 
+from dotenv import load_dotenv
 from pydantic_settings import BaseSettings, SettingsConfigDict
+
+_BACKEND_DIR = Path(__file__).resolve().parent.parent
+_REPO_ROOT = _BACKEND_DIR.parent.parent
+
+load_dotenv(_REPO_ROOT / ".env", override=True)
+load_dotenv(_BACKEND_DIR / ".env", override=True)
 
 
 class Settings(BaseSettings):
     model_config = SettingsConfigDict(
-        env_file=".env",
+        env_file=(_BACKEND_DIR / ".env", _REPO_ROOT / ".env"),
         env_file_encoding="utf-8",
         extra="ignore",
     )
@@ -26,7 +34,9 @@ class Settings(BaseSettings):
 
     brasil_api_base_url: str = "https://brasilapi.com.br/api"
     nasa_power_base_url: str = "https://power.larc.nasa.gov/api"
+    gemini_api_base_url: str = "https://generativelanguage.googleapis.com"
     gemini_api_key: str = ""
+    gemini_model: str = "gemini-1.5-flash"
 
 
 @lru_cache

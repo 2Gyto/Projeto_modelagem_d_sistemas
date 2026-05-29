@@ -1,9 +1,21 @@
+from pathlib import Path
+
+from dotenv import load_dotenv
+
+_BACKEND_DIR = Path(__file__).resolve().parent.parent
+_REPO_ROOT = _BACKEND_DIR.parent.parent
+load_dotenv(_REPO_ROOT / ".env", override=True)
+load_dotenv(_BACKEND_DIR / ".env", override=True)
+
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
 from app.config import get_settings
 from app.domain.exceptions import DomainError, ExternalApiError
+from app.infrastructure.db import models  # noqa: F401 — registra metadados no Base
+from app.infrastructure.db.base import Base
+from app.infrastructure.db.session import engine
 from app.infrastructure.http.routers import auth, health, simulacoes
 
 _settings = get_settings()
@@ -13,6 +25,8 @@ app = FastAPI(
     version="0.1.0",
     description="API REST do simulador SolarCalc (monólito em camadas — ADR-02).",
 )
+
+Base.metadata.create_all(bind=engine)
 
 app.add_middleware(
     CORSMiddleware,
@@ -43,3 +57,4 @@ _prefix = _settings.api_prefix
 app.include_router(health.router, prefix=_prefix)
 app.include_router(auth.router, prefix=_prefix)
 app.include_router(simulacoes.router, prefix=_prefix)
+
