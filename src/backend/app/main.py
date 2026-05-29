@@ -1,11 +1,9 @@
+from pathlib import Path
+
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
-<<<<<<< Updated upstream
-from fastapi.responses import JSONResponse
-=======
-from fastapi.responses import JSONResponse, FileResponse
+from fastapi.responses import FileResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
->>>>>>> Stashed changes
 
 from app.config import get_settings
 from app.domain.exceptions import DomainError, ExternalApiError
@@ -21,7 +19,12 @@ app = FastAPI(
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000", "http://127.0.0.1:5500", "*"],
+    allow_origins=[
+        "http://localhost:3000",
+        "http://127.0.0.1:5500",
+        "http://localhost:8000",
+        "http://127.0.0.1:8000",
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -48,15 +51,16 @@ _prefix = _settings.api_prefix
 app.include_router(health.router, prefix=_prefix)
 app.include_router(auth.router, prefix=_prefix)
 app.include_router(simulacoes.router, prefix=_prefix)
-<<<<<<< Updated upstream
-=======
 
-# Servir frontend estático: templates em /app e assets estáticos em /static
 _front = Path(__file__).resolve().parents[2] / "front_solarcalc"
 _front_templates = _front / "templates"
 _front_static = _front / "static"
 if _front_templates.is_dir():
-    app.mount("/app", StaticFiles(directory=str(_front_templates), html=True), name="frontend")
+    app.mount(
+        "/app",
+        StaticFiles(directory=str(_front_templates), html=True),
+        name="frontend",
+    )
 if _front_static.is_dir():
     app.mount("/static", StaticFiles(directory=str(_front_static)), name="static")
 
@@ -67,4 +71,3 @@ def _frontend_index():
     if index_path.exists():
         return FileResponse(str(index_path))
     return JSONResponse(status_code=404, content={"detail": "Not found"})
->>>>>>> Stashed changes

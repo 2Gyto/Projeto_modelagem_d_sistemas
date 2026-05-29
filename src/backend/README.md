@@ -47,6 +47,17 @@ uvicorn app.main:app --reload --app-dir .
 
 Documentação interativa: [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs)
 
+## Testes unitários
+
+Na pasta `src/backend`:
+
+```bash
+pip install -r requirements-dev.txt
+pytest
+```
+
+Os testes ficam em `tests/` e usam mocks para banco (SQLAlchemy `Session`) e HTTP (`httpx`). Não é necessário PostgreSQL rodando para a suíte padrão.
+
 ## Endpoints (prefixo `/api/v1`)
 
 | Método | Caminho | Descrição |
