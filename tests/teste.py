@@ -1,3 +1,0 @@
-
-# 
-#SEB PACTUDUM 2
