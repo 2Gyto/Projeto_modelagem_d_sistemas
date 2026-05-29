@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SolarCalc</title>
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+
+    <nav class="navbar navbar-expand-lg navbar-dark navbar-solar py-3 sticky-top">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center" href="#">
+                
+                <img src="/static/img/logo_solarcalc_semfundo_ver2.png" alt="Logo SolarCalc" height="45">
+                
+                <span class="fw-bold fs-4 text-solar-brand ms-1">
+                    <span class="text-solar">Solar</span><span class="text-white">Calc</span>
+                </span>
+                
+            </a>
+
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#menuTopo">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="menuTopo">
+                <ul class="navbar-nav ms-auto align-items-center">
+                    <li class="nav-item me-4">
+                        <a class="nav-link text-white" href="#sobre">Sobre</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#simulador" class="btn btn-solar rounded-pill px-4 fw-bold">Simule agora</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <header class="hero-section text-center text-white d-flex align-items-center">
+        <div class="container">
+            <h1 class="display-4 fw-bold mb-3">Descubra o Poder da Energia Solar</h1>
+            <p class="lead mb-4">Simule a viabilidade financeira do seu imóvel em segundos e descubra em quanto tempo o seu investimento se paga.</p>
+            <a href="#simulador" class="btn btn-solar btn-lg rounded-pill px-5 fw-bold shadow">Começar Simulação</a>
+        </div>
+    </header>
+
+    <main class="container py-5" id="simulador">
+        <div class="row justify-content-center">
+            <div class="col-lg-7 col-md-9">
+                
+                <div class="card card-simulador border-0 shadow-lg">
+                    <div class="card-body p-5">
+                        
+                        <form id="formSimulacao">
+                            <div class="mb-4 text-center">
+                                <label class="form-label fw-bold text-solar-title mb-3">1- Selecione o tipo de instalação desejada?</label>
+                                <div class="d-flex justify-content-center gap-4">
+                                    
+                                    <div class="opcao-instalacao">
+                                        <input type="radio" name="tipo" id="residencial" checked class="d-none">
+                                        <label for="residencial" class="text-center cursor-pointer">
+                                            <i class="fa-solid fa-house fa-2x mb-2 icon-tipo"></i>
+                                            <span class="d-block fw-bold">Residencial</span>
+                                        </label>
+                                    </div>
+
+                                    <div class="opcao-instalacao">
+                                        <input type="radio" name="tipo" id="empresarial" class="d-none">
+                                        <label for="empresarial" class="text-center cursor-pointer">
+                                            <i class="fa-solid fa-building fa-2x mb-2 icon-tipo"></i>
+                                            <span class="d-block fw-bold">Empresarial</span>
+                                        </label>
+                                    </div>
+
+                                    <div class="opcao-instalacao">
+                                        <input type="radio" name="tipo" id="agronegocio" class="d-none">
+                                        <label for="agronegocio" class="text-center cursor-pointer">
+                                            <i class="fa-solid fa-tractor fa-2x mb-2 icon-tipo"></i>
+                                            <span class="d-block fw-bold">Agronegócio</span>
+                                        </label>
+                                    </div>
+
+                                </div>
+                            </div>
+
+                            <div class="mb-4 text-center">
+                                <label for="cep" class="form-label fw-bold text-solar-title">2- Qual é o CEP do local da instalação?</label>
+                                <input type="text" class="form-control input-solar text-center" id="cep" name="cep" placeholder="00000-000">
+                            </div>
+
+                            <div class="mb-5 text-center">
+                                <label for="gasto" class="form-label fw-bold text-solar-title">3- Qual é o seu gasto Médio Mensal(R$)</label>
+                                <input type="text" class="form-control input-solar text-center" id="gasto" name="gasto" placeholder="R$ 0,00">
+                            </div>
+
+                            <div class="d-grid d-flex justify-content-center">
+                                <button type="button" class="btn btn-solar btn-lg rounded-pill px-5 fw-bold" onclick="validarEAbrirModal()">
+                                    Simular
+                                </button>
+                            </div>
+                        </form>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </main>
+
+    <div class="modal fade" id="modalLead" tabindex="-1" aria-labelledby="modalLeadLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content rounded-4 border-0 shadow">
+                <div class="modal-header border-0 pb-0">
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body text-center p-4 pt-0">
+                    <h3 class="fw-bold mb-4" id="modalLeadLabel">Receba seu relatório completo</h3>
+                    <p class="text-muted mb-4">Enviaremos o link do seu dashboard personalizado diretamente para o seu e-mail.</p>
+                    
+                    <form id="formLead" onsubmit="enviarSimulacao(event)">
+                        <div class="mb-3">
+                            <input type="text" class="form-control input-solar" placeholder="Nome" name="nome_lead" id="nome_lead" required>
+                        </div>
+                        <div class="mb-4">
+                            <input type="email" class="form-control input-solar" placeholder="Email" name="email_lead" id="email_lead" required>
+                        </div>
+                        <div class="alert alert-danger d-none" id="erroLead" role="alert"></div>
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-solar btn-lg rounded-pill fw-bold" id="btnEnviarLead">Enviar</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://unpkg.com/imask"></script>
+    <script src="/static/js/wizard.js"></script>
+    
+</body>
+</html>
