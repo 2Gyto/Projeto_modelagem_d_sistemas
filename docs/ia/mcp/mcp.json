@@ -1,0 +1,48 @@
+{
+    "mcpServers": {
+      "github": {
+        "type": "http",
+        "url": "https://api.githubcopilot.com/mcp/",
+        "headers": {
+          "Authorization": "Bearer SEU_GITHUB_PAT_AQUI"
+        }
+      },
+      "mysql": {
+        "type": "stdio",
+        "command": "cmd",
+        "args": ["/c", "npx", "-y", "@benborla29/mcp-server-mysql"],
+        "env": {
+          "MYSQL_HOST": "127.0.0.1",
+          "MYSQL_PORT": "3306",
+          "MYSQL_USER": "mcp_user",
+          "MYSQL_PASS": "SUA_SENHA",
+          "MYSQL_DB": "nome_do_banco",
+          "ALLOW_INSERT_OPERATION": "false",
+          "ALLOW_UPDATE_OPERATION": "false",
+          "ALLOW_DELETE_OPERATION": "false"
+        }
+      },
+      "sqlserver": {
+        "type": "stdio",
+        "command": "cmd",
+        "args": ["/c", "npx", "-y", "@bilims/mcp-sqlserver"],
+        "env": {
+          "SQLSERVER_HOST": "localhost",
+          "SQLSERVER_PORT": "1433",
+          "SQLSERVER_USER": "SEU_USUARIO",
+          "SQLSERVER_PASSWORD": "SUA_SENHA",
+          "SQLSERVER_DATABASE": "nome_do_banco",
+          "SQLSERVER_ENCRYPT": "false",
+          "SQLSERVER_TRUST_CERT": "true"
+        }
+      },
+      "rest-api": {
+        "type": "stdio",
+        "command": "cmd",
+        "args": ["/c", "npx", "-y", "mcp-fetch-server"],
+        "env": {
+          "DEFAULT_LIMIT": "50000"
+        }
+      }
+    }
+  }
