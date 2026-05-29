@@ -24,6 +24,10 @@ from app.infrastructure.http.schemas import (
     SimulacaoPublicaResponse,
 )
 
+import os
+import smtplib
+from email.mime.text import MIMEText
+
 
 class SimulacaoPublicaService:
     def __init__(self, db: Session) -> None:
@@ -60,6 +64,38 @@ class SimulacaoPublicaService:
         sim.status = StatusSimulacao.CONCLUIDA
         self._db.commit()
         self._db.refresh(sim)
+
+        # ---> INÍCIO DO MOTOR DE E-MAIL <---
+        try:
+            remetente = os.environ.get("SMTP_USER")
+            senha = os.environ.get("SMTP_PASSWORD")
+            
+            if remetente and senha:
+                corpo = (
+                    f"Olá, {usuario.nome}!\n\n"
+                    f"Os cálculos do seu telhado solar foram concluídos com sucesso.\n"
+                    f"Acesse o link abaixo para visualizar seu dashboard e a projeção de economia para os próximos 25 anos:\n\n"
+                    f"https://https://85f9ee2a172de1.lhr.life//dashboard?id={sim.id}\n\n"
+                    f"Um abraço,\n"
+                    f"Equipe Zila Technologies"
+                )
+                
+                msg = MIMEText(corpo, 'plain', 'utf-8')
+                msg['Subject'] = 'Resultado da sua simulação - SolarCalc'
+                msg['From'] = remetente
+                msg['To'] = usuario.email
+
+                # Conecta ao Gmail e dispara
+                with smtplib.SMTP('smtp.gmail.com', 587) as server:
+                    server.starttls()
+                    server.login(remetente, senha)
+                    server.send_message(msg)
+                    print(f"SUCESSO: E-mail enviado para {usuario.email}")
+            else:
+                print("AVISO: Credenciais de e-mail não encontradas no .env")
+        except Exception as e:
+            print(f"ERRO AO ENVIAR E-MAIL: {e}")
+        # ---> FIM DO MOTOR DE E-MAIL <---   
 
         return SimulacaoPublicaResponse(
             simulacao_id=sim.id,
