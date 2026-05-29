@@ -8,6 +8,8 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="/static/css/style.css">
+    
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
 
@@ -39,17 +41,26 @@
                 <p class="text-muted">Com base no seu CEP <span id="dadoCep" class="fw-bold"></span> e gasto mensal de <span id="dadoGasto" class="fw-bold"></span>.</p>
             </div>
 
-            <div class="row g-4 justify-content-center">
-                <div class="col-md-5">
-                    <div class="card card-simulador border-0 shadow-lg text-center p-4">
+            <div class="row g-4 justify-content-center align-items-stretch mb-4">
+                
+                <div class="col-md-7">
+                    <div class="card border-0 shadow-sm p-4 h-100">
+                        <h5 class="text-center text-muted fw-bold mb-3">Economia Acumulada (25 Anos)</h5>
+                        <canvas id="graficoProjecao"></canvas>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="card card-simulador border-0 shadow-lg text-center p-4 h-100 d-flex flex-column justify-content-center" style="margin-top: -20px;">
                         <i class="fa-solid fa-solar-panel fa-3x mb-3" style="color: var(--solar-orange);"></i>
                         <h2 class="fw-bold display-3" id="resultadoPaineis" style="color: var(--solar-orange);">--</h2>
                         <p class="text-muted mb-0 fw-bold">placas solares recomendadas</p>
                     </div>
                 </div>
+
             </div>
 
-            <div class="row g-4 mt-3 justify-content-center">
+            <div class="row g-4 justify-content-center">
                 <div class="col-md-3">
                     <div class="card border-0 shadow-sm text-center p-3">
                         <small class="text-muted">Consumo estimado</small>
