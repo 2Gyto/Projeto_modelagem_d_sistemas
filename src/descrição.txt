@@ -1,1 +1,0 @@
-Esta pasta deve conter o código principal do projeto
